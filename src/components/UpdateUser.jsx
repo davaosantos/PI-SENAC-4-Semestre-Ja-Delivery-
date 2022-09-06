@@ -1,11 +1,13 @@
-import React from "react";
+import React, {useState} from "react";
+import { Table, Button, Form } from 'reactstrap';
 
-function UpdateUser(){
-    return(
-        <div>
-            <h1>Ola</h1>
-        </div>
+import ListaUsuarios from "../pages/listaUsuarios/listaUsuarios";
+import { useContext } from "react";
+
+function updateUser(){
+    return (
+        <div>Hello</div>
     )
 }
 
-export default UpdateUser;
+export default updateUser;

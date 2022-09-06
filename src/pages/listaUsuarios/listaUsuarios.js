@@ -1,10 +1,24 @@
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, React } from 'react';
 
 
 import { collection, deleteDoc, doc, getDocs, updateDoc } from "firebase/firestore";
 import { async } from '@firebase/util';
-import { Table, Button } from 'reactstrap';
+import { Label, Form, Table, Button, FormGroup, Col, Input } from 'reactstrap';
+
+import updateButton from '../../assets/pencil.png'
+
+import {
+    MDBBtn,
+    MDBModal,
+    MDBModalDialog,
+    MDBModalContent,
+    MDBModalHeader,
+    MDBModalTitle,
+    MDBModalBody,
+    MDBModalFooter,
+  } from 'mdb-react-ui-kit';
+
 
 import '../../styles/home.css'
 import { BrowserRouter, Routes, Route, Link, useNavigate } from 'react-router-dom';
@@ -13,12 +27,19 @@ import facebook from "../../assets/facebook(1).png"
 import instagram from "../../assets/instagram(1).png"
 import twitter from "../../assets/twitter(1).png"
 
-import UpdateUser from '../../components/UpdateUser';
 
 
 import { db } from '../../firebase';
+import  Modal from 'react-modal';
+
+
 
 function ListaUsuarios(){
+
+    const [basicModal, setBasicModal] = useState(false);
+
+    const toggleShow = () => setBasicModal(!basicModal);
+
     const [users, setUsers] = useState([]);
     const usersCollectionRef = collection(db, "users");
 
@@ -27,6 +48,10 @@ function ListaUsuarios(){
         const userDoc = doc(db, "users", id);
         await deleteDoc(userDoc);
         alert("Usuário deletado");
+    }
+
+    const updateUser = (id, updatedUser) =>{
+        setUsers(users.map((user) => user.id == id? updateUser : user))
     }
 
     useEffect(() =>{
@@ -184,9 +209,77 @@ function ListaUsuarios(){
                                     Ativo/inativo
                                 </td>
 
-                                <td>
-                                    <Button>Update</Button>
-                                    <Button onClick={() => {deleteUser(user.id)}}>X</Button>
+                                <td class="tableUserData">
+                                    <Button className="buttonUpdateUser" onClick={toggleShow}><img height='10px' width="10px" src={updateButton}></img></Button>
+                                    <MDBModal  show={basicModal} setShow={setBasicModal} tabIndex='-1'>
+                                            <MDBModalDialog>
+                                            <MDBModalContent className='modalUserUpdate'>
+                                                <MDBModalHeader>
+                                                <MDBModalTitle>Modal title</MDBModalTitle>
+                                                <MDBBtn className='btn-close' color='none' onClick={toggleShow}></MDBBtn>
+                                                </MDBModalHeader>
+                                                <MDBModalBody>
+
+                                                <Form className='form-update-user'>      
+                                                    <FormGroup row>
+
+                                                            <Label for="nome" sm={2}>Nome</Label>
+                                                            <Col sm={10}>
+                                                                <Input type="text" name="nome" id="nome" placeholder="Nome" />
+                                                            </Col>
+                                                    </FormGroup>
+
+                                                            <FormGroup row>
+                                                            <Label for="email" sm={2}>Email</Label>
+                                                            <Col sm={10}>
+                                                                <Input type="email" name="email" id="email" placeholder="Email" />
+                                                            </Col>
+                                                            </FormGroup>
+                                                            <FormGroup row>
+                                                            <Label for="data_nascimento" sm={2}>D.O.B</Label>
+                                                            <Col sm={10}>
+                                                                <Input type="date" name="data_nascimento" id="data_nascimento" placeholder="Data de nascimento" />
+                                                            </Col>
+                                                            </FormGroup>
+
+                                                            <FormGroup row>
+                                                            <Label for="tipo_usuario" sm={2}>Tipo</Label>
+                                                            <Col sm={10}>
+                                                                <Input type="select" name="select" id="exampleSelect" />
+                                                            </Col>
+                                                            </FormGroup>
+
+                                                            <FormGroup row>
+                                                            <Label for="senha" sm={2}>Senha</Label>
+                                                            <Col sm={10}>
+                                                                <Input type="password" name="senha" id="senha" placeholder="senha" />
+                                                            </Col>
+                                                            </FormGroup>
+
+                                                            <FormGroup row>
+                                                            <Label for="status" sm={2}>Status</Label>
+                                                            <Col sm={10}>
+                                                                <Input type="status" name="status" id="status" placeholder="status" />
+                                                            </Col>
+                                                            </FormGroup>
+                                                            
+                                                            
+                                                    </Form>
+
+
+
+                                                </MDBModalBody>
+
+                                                <MDBModalFooter>
+                                                <MDBBtn className='modalEditCloseBtn' color='secondary' onClick={toggleShow}>
+                                                    Close
+                                                </MDBBtn>
+                                                <MDBBtn className='modalEditSaveBtn' >Save changes</MDBBtn>
+                                                </MDBModalFooter>
+                                            </MDBModalContent>
+                                            </MDBModalDialog>
+                                        </MDBModal>
+                                    <Button height='10px' width="10px" onClick={() => {deleteUser(user.id)}}>X</Button>
                                 </td>
 
                                 </tr>

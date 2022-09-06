@@ -123,7 +123,29 @@ body{
 
   .listaUsuariosRegistros{
     padding-top: 2%;
-    padding-left: 2%;
-    padding-right: 2%;
     padding-bottom: 5%;
   }
+
+
+  /*CSS Modal lista de usuarios*/
+
+  .modalEditSaveBtn, .modalEditSaveBtn:hover{
+    background-color: #FFA200;
+    color: #212529;
+  }
+
+  .modalUserUpdate{
+    margin: auto;
+    padding: 5px;
+  }
+
+  .form-update-user Label{
+    padding: 5px;
+    color: black;
+  }
+
+  .buttonUpdateUser{
+    background-color: #FFA200;
+  }
+
+ 
