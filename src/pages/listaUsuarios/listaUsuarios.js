@@ -279,7 +279,7 @@ function ListaUsuarios(){
                                             </MDBModalContent>
                                             </MDBModalDialog>
                                         </MDBModal>
-                                    <Button height='10px' width="10px" onClick={() => {deleteUser(user.id)}}>X</Button>
+                                    <Button height='10px' width="10px" onClick={() => {deleteUser(user.id)}}>x</Button>
                                 </td>
 
                                 </tr>
