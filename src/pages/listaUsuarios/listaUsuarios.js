@@ -36,6 +36,24 @@ import  Modal from 'react-modal';
 
 function ListaUsuarios(){
 
+    //Constantes do update
+    const [newNome, setNewNome]= useState("");
+    const [newTelefone, setNewTelefone]= useState(0);
+    const [newEmail, setNewEmail]= useState("");
+    const [newDataNascimento, setNewDataNascimento]= useState("");
+    const [newTipoUsuario, setNewTipoUsuario]= useState("");
+    const [newSenha, setNewSenha]= useState("");
+
+    //Camada de update
+
+    const updateUser = async(id, nome, telefone, email, data_nascimento, tipo_usuario, senha) => {
+        const userDoc = doc(db, "users", id)
+        const newFields = {nome: newNome, telefone:newTelefone, email:newEmail, data_nascimento:newDataNascimento,
+        tipo_usuario:newTipoUsuario, senha:newSenha};
+        await updateDoc(userDoc, newFields);
+
+    }
+
     const [basicModal, setBasicModal] = useState(false);
 
     const toggleShow = () => setBasicModal(!basicModal);
@@ -43,15 +61,10 @@ function ListaUsuarios(){
     const [users, setUsers] = useState([]);
     const usersCollectionRef = collection(db, "users");
 
-
     const deleteUser = async (id) => {
         const userDoc = doc(db, "users", id);
         await deleteDoc(userDoc);
         alert("Usuário deletado");
-    }
-
-    const updateUser = (id, updatedUser) =>{
-        setUsers(users.map((user) => user.id == id? updateUser : user))
     }
 
     useEffect(() =>{
@@ -85,12 +98,14 @@ function ListaUsuarios(){
         </a>
         <ul className="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
           <div>
+            <Link to='/home'>
             <img
               src={logoJaDelivery}
               alt=""
               className="logoJaDelivery"
               height="45px"
             />
+            </Link>
           </div>
           <li>
             <Link to='/cadastroProduto' className="nav-link px-2 text-white">
@@ -113,7 +128,7 @@ function ListaUsuarios(){
             </a>
           </li>
           <li>
-            <Link to='/listaUsuarios' className="nav-link px-2 text-white">
+          <Link to='/listaUsuarios' className="nav-link px-2 text-white">
               Lista Usuários
             </Link>
           </li>
@@ -225,34 +240,54 @@ function ListaUsuarios(){
 
                                                             <Label for="nome" sm={2}>Nome</Label>
                                                             <Col sm={10}>
-                                                                <Input type="text" name="nome" id="nome" placeholder="Nome" />
+                                                                <Input type="text"  name="nome" id="nome" placeholder="Nome"
+                                                                onChange={(event) => {setNewNome(event.target.value)}} />
                                                             </Col>
                                                     </FormGroup>
 
                                                             <FormGroup row>
                                                             <Label for="email" sm={2}>Email</Label>
                                                             <Col sm={10}>
-                                                                <Input type="email" name="email" id="email" placeholder="Email" />
+                                                                <Input type="email"  name="email" id="email" placeholder="Email" 
+                                                                onChange={(event) => {setNewEmail(event.target.value)}}/>
                                                             </Col>
                                                             </FormGroup>
                                                             <FormGroup row>
                                                             <Label for="data_nascimento" sm={2}>D.O.B</Label>
                                                             <Col sm={10}>
-                                                                <Input type="date" name="data_nascimento" id="data_nascimento" placeholder="Data de nascimento" />
+                                                                <Input  type="date" name="data_nascimento" id="data_nascimento" placeholder="Data de nascimento"
+                                                                onChange={(event) => {setNewDataNascimento(event.target.value)}} />
                                                             </Col>
                                                             </FormGroup>
 
                                                             <FormGroup row>
                                                             <Label for="tipo_usuario" sm={2}>Tipo</Label>
                                                             <Col sm={10}>
-                                                                <Input type="select" name="select" id="exampleSelect" />
+                                                                <Input type="select" name="select" id="exampleSelect"
+                                                                onChange={(event) => {setNewTipoUsuario(event.target.value)}}>
+                                                                    <option>
+                                                                                Administrador
+                                                                                </option>
+                                                                                <option>
+                                                                                Estoquista
+                                                                    </option>
+                                                                </Input>
+                                                            </Col>
+                                                            </FormGroup>
+
+                                                            <FormGroup row>
+                                                            <Label for="telefone" sm={2}>Email</Label>
+                                                            <Col sm={10}>
+                                                                <Input type="tel"  name="telefone" id="telefone" placeholder="Telefone" 
+                                                                onChange={(event) => {setNewTelefone(event.target.value)}}/>
                                                             </Col>
                                                             </FormGroup>
 
                                                             <FormGroup row>
                                                             <Label for="senha" sm={2}>Senha</Label>
                                                             <Col sm={10}>
-                                                                <Input type="password" name="senha" id="senha" placeholder="senha" />
+                                                                <Input type="password"  name="senha" id="senha" placeholder="senha"
+                                                                onChange={(event) => {setNewSenha(event.target.value)}} />
                                                             </Col>
                                                             </FormGroup>
 
@@ -274,7 +309,9 @@ function ListaUsuarios(){
                                                 <MDBBtn className='modalEditCloseBtn' color='secondary' onClick={toggleShow}>
                                                     Close
                                                 </MDBBtn>
-                                                <MDBBtn className='modalEditSaveBtn' >Save changes</MDBBtn>
+                                                <MDBBtn className='modalEditSaveBtn' onClick ={() =>{
+                                                    updateUser(user.id, user.nome, user.telefone, "", "", user.senha);
+                                                }} >Save changes</MDBBtn>
                                                 </MDBModalFooter>
                                             </MDBModalContent>
                                             </MDBModalDialog>

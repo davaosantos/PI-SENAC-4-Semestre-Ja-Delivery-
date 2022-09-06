@@ -10,6 +10,7 @@ import reportWebVitals from './reportWebVitals';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import home from './pages/home/index';
 import CadastroUsuario from './pages/cadastroUsuario/cadastroUsuario';
+import CadastroProduto from './pages/cadastroProduto/cadastroProduto';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -19,7 +20,7 @@ root.render(
 
       <Routes>
         <Route path = "/"  exact={true} element={<App />}></Route>
-        <Route path='/cadastroProduto' element></Route>
+        <Route path='/cadastroProduto' element={<CadastroProduto/>}></Route>
         <Route path='/cadastroUsuario' element={<CadastroUsuario/>}></Route>
         <Route path='/' element></Route>
         <Route path='/listaUsuarios' element={<ListaUsuarios/>}></Route>
