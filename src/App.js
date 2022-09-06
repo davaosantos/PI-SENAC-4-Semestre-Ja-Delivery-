@@ -3,45 +3,7 @@ import { Link } from "react-router-dom";
 import logoJaDelivery  from "./assets/pngtree-cartoon-delivery-staff_cb.png"
 
 
-import { signup, login, logout, useAuth } from "./firebase";
-
 function App() {
-
-  const [ loading, setLoading ] = useState(false);
-  const currentUser = useAuth();
-
-  const emailRef = useRef();
-  const passwordRef = useRef();
-
-  async function handleSignup() {
-    setLoading(true);
-    // try {
-      await signup(emailRef.current.value, passwordRef.current.value);
-    // } catch {
-      // alert("Error!");
-    // }
-    setLoading(false);
-  }
-
-  async function handleLogin() {
-    setLoading(true);
-    try {
-      await login(emailRef.current.value, passwordRef.current.value);
-    } catch {
-      alert("Error!");
-    }
-    setLoading(false);
-  }
-
-  async function handleLogout() {
-    setLoading(true);
-    try {
-      await logout();
-    } catch {
-      alert("Error!");
-    }
-    setLoading(false);
-  }
 
   return (
     <div className="wrapper">
@@ -52,13 +14,13 @@ function App() {
   <form className="p-3 mt-3">
     <div className="form-field d-flex align-items-center">
       <span className="far fa-user" />
-      <input type="text" ref={emailRef} name="emailRef" id="emailRef" placeholder="Email" />
+      <input type="text"  name="emailRef" id="emailRef" placeholder="Email" />
     </div>
     <div className="form-field d-flex align-items-center">
       <span className="fas fa-key" />
-      <input type="password" ref={passwordRef} name="password" id="pwd" placeholder="Password" />
+      <input type="password"  name="password" id="pwd" placeholder="Password" />
     </div>
-    <button className="btn mt-3" disabled={ loading || currentUser } onClick={handleLogin}>Login</button>
+    <button className="btn mt-3">Login</button>
   </form>
   <div className="text-center fs-6">
     

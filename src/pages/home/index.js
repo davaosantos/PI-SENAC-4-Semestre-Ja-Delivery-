@@ -41,9 +41,9 @@ export default function Home(){
             </Link>
           </li>
           <li>
-            <a href="#" className="nav-link px-2 text-white">
+          <Link to='/listaUsuarios' className="nav-link px-2 text-white">
               Lista Produtos
-            </a>
+            </Link>
           </li>
           <li>
             <Link to='/cadastroUsuario' href="#" className="nav-link px-2 text-white">

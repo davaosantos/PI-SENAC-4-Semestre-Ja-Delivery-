@@ -6,11 +6,8 @@ import facebook from "../../assets/facebook(1).png"
 import instagram from "../../assets/instagram(1).png"
 import twitter from "../../assets/twitter(1).png"
 import { useState, useEffect } from 'react';
-import fire from '../../firebase';
-import { ToastContainer, toast } from 'react-toastify';
-
-
-
+import { collection, addDoc } from "firebase/firestore";
+import { db } from './../../firebase';
 
 const initialState = {
   nome:"",
@@ -23,32 +20,21 @@ const initialState = {
 
 export default function CadastroUsuario(){
 
-    const [state, setState] = useState(initialState);
-    const [data, setData] = useState({});
+    const [newNome, setNewNome]= useState("");
+    const [newTelefone, setNewTelefone]= useState(0);
+    const [newEmail, setNewEmail]= useState("");
+    const [newDataNascimento, setNewDataNascimento]= useState("");
+    const [newTipoUsuario, setNewTipoUsuario]= useState("");
+    const [newSenha, setNewSenha]= useState("");
 
-    const {nome, email, telefone, data_nascimento, tipo_usuario, senha} = state;
+    const usersCollectionRef = collection(db, "users");
 
-    const navigate = useNavigate();
-
-    const handleInputChange = (e) => {
-      const {name, value} = e.target;
-      setState({...state, [name]: value})
-    };
-    const handleSubmit = (e) => {
-      e.preventDefault();
-      if(!nome || !email || !senha){
-        toast.error("Por favor , insira um valor em cada campo do cadastro");
-      }else{
-        fire.child("usuarios").push(state, (err) => {
-          if(err){
-            toast.error(err);
-          }else{
-            toast.success("Usuario cadastrado com sucesso");
-          }
-        });
-        setTimeout(() => navigate.push("/home"), 500);
-      }
-    };
+    const createUser = async () =>{
+      await addDoc(usersCollectionRef, {nome: newNome, telefone: newTelefone, 
+        email:newEmail, data_nascimento:newDataNascimento, tipo_usuario:newTipoUsuario, 
+         senha: newSenha})
+    }
+    
 
     return(
         <>
@@ -101,9 +87,9 @@ export default function CadastroUsuario(){
             </a>
           </li>
           <li>
-            <a href="#" className="nav-link px-2 text-white">
+          <Link to='/listaUsuarios' className="nav-link px-2 text-white">
               Lista Usuários
-            </a>
+            </Link>
           </li>
         </ul>
         <form className="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3" role="search">
@@ -124,7 +110,7 @@ export default function CadastroUsuario(){
   </header>
 
     <section className='FormUsuario'>
-    <Form onSubmit={handleSubmit}>
+    <Form>
       
     
   <Row>
@@ -138,8 +124,7 @@ export default function CadastroUsuario(){
           name="nome"
           placeholder="Nome"
           type="text"
-          value={nome}
-          onChange={handleInputChange}
+          onChange={(event) => {setNewNome(event.target.value)}}
         />
       </FormGroup>
     </Col>
@@ -153,8 +138,7 @@ export default function CadastroUsuario(){
           name="email"
           placeholder="Email"
           type="email"
-          value={email}
-          onChange={handleInputChange}
+          onChange={(event) => {setNewEmail(event.target.value)}}
         />
       </FormGroup>
     </Col>
@@ -169,8 +153,7 @@ export default function CadastroUsuario(){
           name="telefone"
           placeholder="Telefone"
           type="tel"
-          value={telefone}
-          onChange={handleInputChange}
+          onChange={(event) => {setNewTelefone(event.target.value)}}
         />
       </FormGroup>
     </Col>
@@ -185,8 +168,7 @@ export default function CadastroUsuario(){
           name="data_nascimento"
           placeholder="Data nascimento"
           type="date"
-          value={data_nascimento}
-          onChange={handleInputChange}
+          onChange={(event) => {setNewDataNascimento(event.target.value)}}
         />
       </FormGroup>
     </Col>
@@ -198,8 +180,7 @@ export default function CadastroUsuario(){
         id="tipo_usuario"
         name="tipo_usuario"
         type="select"
-        value={tipo_usuario}
-        onChange={handleInputChange}
+        onChange={(event) => {setNewTipoUsuario(event.target.value)}}
       >
         <option>
           Administrador
@@ -221,14 +202,13 @@ export default function CadastroUsuario(){
           name="senha"
           placeholder="Senha"
           type="password"
-          value={senha}
-          onChange={handleInputChange}
+          onChange={(event) => {setNewSenha(event.target.value)}}
         />
       </FormGroup>
     </Col>
   </Row>
   
-  <Button type="submit" value="save">
+  <Button onClick={createUser}>
     Sign in
   </Button>
   

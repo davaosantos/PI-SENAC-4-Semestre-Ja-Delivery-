@@ -1,56 +1,26 @@
-import { useEffect, useState } from "react";
 
-// Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "firebase/auth";
-import "firebase/database";
+
+import { getFirestore } from "firebase/firestore";
+import { initializeApp } from 'firebase/app';
 
 const firebaseConfig = {
 
-  apiKey: "AIzaSyALK1d-rDSih7J8QEQqlsbrL31A-mrr8co",
+  apiKey: "AIzaSyByGAtTu0u2eHdxPgassvZBrmRsyMX4HmI",
 
-  authDomain: "jadelivery-f351e.firebaseapp.com",
+  authDomain: "crudjadelivery.firebaseapp.com",
 
-  projectId: "jadelivery-f351e",
+  projectId: "crudjadelivery",
 
-  storageBucket: "jadelivery-f351e.appspot.com",
+  storageBucket: "crudjadelivery.appspot.com",
 
-  messagingSenderId: "443796003968",
+  messagingSenderId: "307615361447",
 
-  appId: "1:443796003968:web:e904e081867ca5f2ea5a65",
-
-  measurementId: "G-1X2S3RJBCP"
+  appId: "1:307615361447:web:34f99e2a5077b8da4aee82"
 
 };
 
 
-// Initialize Firebase
-const fire = initializeApp(firebaseConfig);
-const auth = getAuth();
+const app = initializeApp(firebaseConfig);
+export const db = getFirestore(app);
 
-export default fire;
-
-export function signup(email, password) {
-  return createUserWithEmailAndPassword(auth, email, password);
-}
-
-export function login(email, password) {
-  return signInWithEmailAndPassword(auth, email, password);
-}
-
-export function logout() {
-  return signOut(auth);
-}
-
-// Custom Hook
-export function useAuth() {
-  const [ currentUser, setCurrentUser ] = useState();
-
-  useEffect(() => {
-    const unsub = onAuthStateChanged(auth, user => setCurrentUser(user));
-    return unsub;
-  }, [])
-
-  return currentUser;
-}
 
