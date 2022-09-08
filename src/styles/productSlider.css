@@ -1,0 +1,22 @@
+
+/*CSS do botao*/
+.buttonCardProduct{
+    background-color: #FFA200;
+    border-color: black;
+}
+
+.buttonCardProduct:hover{
+    background-color: #24272b !important;
+}
+
+/*CSS do conteudo*/
+
+.cardPreco{
+    font-size: 30px;
+}
+
+.cardTitulo{
+    font-size: 20px;
+}
+
+

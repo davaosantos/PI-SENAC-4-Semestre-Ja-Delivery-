@@ -6,6 +6,8 @@ import facebook from "../../assets/facebook(1).png"
 import instagram from "../../assets/instagram(1).png"
 import twitter from "../../assets/twitter(1).png"
 
+import ProductSlider from '../../components/ProductSlider';
+
 export default function Home(){
     return(
         <>
@@ -79,6 +81,16 @@ export default function Home(){
       </div>
     </div>
   </header>
+
+  <section className='carroselProdutos'>
+      <h1>FAIXA DA LANDING</h1>
+  </section>
+
+  <section className='carroselProdutos'>
+      <ProductSlider/>
+  </section>
+
+
   <footer>
     <div className="container">
       <footer className="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top">

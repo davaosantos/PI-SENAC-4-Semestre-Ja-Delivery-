@@ -148,3 +148,11 @@ footer{
   background-color: #FFA200;
 }
 
+
+/*CSS Carrosel*/
+
+.carroselProdutos{
+  position: relative;
+  bottom: 0px;
+  border-radius: 200px !important;
+}
