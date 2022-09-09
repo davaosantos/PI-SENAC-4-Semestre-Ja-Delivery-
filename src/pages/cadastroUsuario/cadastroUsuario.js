@@ -7,7 +7,9 @@ import instagram from "../../assets/instagram(1).png"
 import twitter from "../../assets/twitter(1).png"
 import { useState, useEffect } from 'react';
 import { collection, addDoc } from "firebase/firestore";
-import { db } from './../../firebase';
+import { db, auth } from './../../firebase';
+import { signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'firebase/auth';
+
 
 const initialState = {
   nome:"",
@@ -33,6 +35,16 @@ export default function CadastroUsuario(){
       await addDoc(usersCollectionRef, {nome: newNome, telefone: newTelefone, 
         email:newEmail, data_nascimento:newDataNascimento, tipo_usuario:newTipoUsuario, 
          senha: newSenha})
+
+         const signIn = () =>{
+          createUserWithEmailAndPassword(auth, newEmail, newSenha)
+          .then(auth=> console.log(auth))
+          .catch(error => console.error(error))
+         }
+
+         signIn();
+         alert("Usuario cadastrado com sucesso");
+         window.location.reload();
     }
     
 

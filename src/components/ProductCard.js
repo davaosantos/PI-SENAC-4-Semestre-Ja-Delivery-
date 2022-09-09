@@ -10,8 +10,8 @@ const ProductCard = props => {
 
     return (
         <Card className="p-0 overflow-hidden h-100 shadow cardProduct" >
-            <div className="overflow-hidden rounded p-0 bg-light">
-                <Card.Img variant="top" src={imgSrc} height="150px" /> 
+            <div className="overflow-hidden rounded p-0 bg-light" >
+                <Card.Img variant="top" src={imgSrc} height="115px" /> 
             </div>
             <Card.Body className = "text-center cardContent">
                 <Card.Title className="display-6 cardPreco">{price}</Card.Title>

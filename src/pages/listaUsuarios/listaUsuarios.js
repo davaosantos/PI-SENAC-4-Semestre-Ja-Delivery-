@@ -47,6 +47,7 @@ function ListaUsuarios() {
   const [newDataNascimento, setNewDataNascimento] = useState("");
   const [newTipoUsuario, setNewTipoUsuario] = useState("");
   const [newSenha, setNewSenha] = useState("");
+  const [newStatus, setNewStatus] = useState("");
 
   //Camada de update
 
@@ -57,7 +58,8 @@ function ListaUsuarios() {
     email,
     data_nascimento,
     tipo_usuario,
-    senha
+    senha,
+    status
   ) => {
     const userDoc = doc(db, "users", id);
     const newFields = {
@@ -67,8 +69,11 @@ function ListaUsuarios() {
       data_nascimento: newDataNascimento,
       tipo_usuario: newTipoUsuario,
       senha: newSenha,
+      status: newStatus
     };
     await updateDoc(userDoc, newFields);
+    alert("Usuario alterado com sucesso");
+    window.location.reload();
   };
 
   const [basicModal, setBasicModal] = useState(false);
@@ -204,11 +209,11 @@ function ListaUsuarios() {
                     <td>{user.nome}</td>
                     <td>{user.telefone}</td>
                     <td>{user.email}</td>
-                    <td>teste</td>
+                    <td>{user.data_nascimento}</td>
                     <td>{user.tipo_usuario}</td>
                     <td>{user.senha}</td>
 
-                    <td>Ativo/inativo</td>
+                    <td>{user.status}</td>
 
                     <td class="tableUserData">
                       <Button className="buttonUpdateUser" onClick={toggleShow}>
@@ -342,17 +347,23 @@ function ListaUsuarios() {
 
                                 <FormGroup row>
                                   <Label for="status" sm={2}>
-                                    Status
+                                    status
                                   </Label>
                                   <Col sm={10}>
                                     <Input
-                                      type="status"
+                                      type="select"
                                       name="status"
                                       id="status"
-                                      placeholder="status"
-                                    />
+                                      onChange={(event) => {
+                                        setNewStatus(event.target.value);
+                                      }}
+                                    >
+                                      <option>Ativo</option>
+                                      <option>Inativo</option>
+                                    </Input>
                                   </Col>
                                 </FormGroup>
+
                               </Form>
                             </MDBModalBody>
 

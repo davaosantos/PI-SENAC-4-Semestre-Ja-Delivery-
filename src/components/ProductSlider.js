@@ -78,7 +78,6 @@ const ProductSlider = () => {
                 <SwiperSlide>
                     <ProductCard data={{imgSrc: img7, price:'$10', title:'Pitu'}}/>
                 </SwiperSlide>
-
                
             </Swiper>
         </div>
