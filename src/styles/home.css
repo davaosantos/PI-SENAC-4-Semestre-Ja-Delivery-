@@ -156,3 +156,13 @@ footer{
   bottom: 0px;
   border-radius: 200px !important;
 }
+
+.btnLogout, .btnLogout:hover{
+  background-color: #FFA200 ;
+  border-color: #fff;
+}
+
+.btnLogout:hover{
+  background-color: #ffa200d7 !important;
+  border-color: #fff !important;
+}

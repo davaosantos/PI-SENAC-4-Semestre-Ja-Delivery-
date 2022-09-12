@@ -44,7 +44,6 @@ export default function CadastroUsuario(){
 
          signIn();
          alert("Usuario cadastrado com sucesso");
-         window.location.reload();
     }
     
 
