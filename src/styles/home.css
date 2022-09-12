@@ -159,10 +159,10 @@ footer{
 
 .btnLogout, .btnLogout:hover{
   background-color: #FFA200 ;
-  border-color: #fff;
+  border-color: black;
 }
 
 .btnLogout:hover{
   background-color: #ffa200d7 !important;
-  border-color: #fff !important;
+  border-color: black !important;
 }
