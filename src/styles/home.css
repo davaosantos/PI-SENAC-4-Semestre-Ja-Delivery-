@@ -130,8 +130,14 @@ footer{
 /*CSS Modal lista de usuarios*/
 
 .modalEditSaveBtn, .modalEditSaveBtn:hover{
-  background-color: #FFA200;
+  background-color: #FFA200 !important;
   color: #212529;
+  border-style: none;
+}
+
+.btnInativarUsuario{
+  border-style: none;
+  background-color: grey;
 }
 
 .modalUserUpdate{
@@ -146,7 +152,18 @@ footer{
 
 .buttonUpdateUser{
   background-color: #FFA200;
+  border-style: none;
 }
+
+.buttonUpdateUser:hover{
+  background-color: #FFA200 !important;
+}
+
+.btnInativarUsuario:hover{
+  background-color: grey !important;
+}
+
+
 
 
 /*CSS Carrosel*/
@@ -177,5 +194,6 @@ footer{
 }
 
 .errorEmail{
-  color:red;
+  color: red;
+  text-align: center;
 }

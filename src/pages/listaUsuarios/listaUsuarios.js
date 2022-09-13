@@ -401,6 +401,7 @@ function ListaUsuarios() {
                         </MDBModalDialog>
                       </MDBModal>
                       <Button
+                        className="btnInativarUsuario"
                         height="10px"
                         width="10px"
                         onClick={() => {
