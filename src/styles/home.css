@@ -166,3 +166,16 @@ footer{
   background-color: #ffa200d7 !important;
   border-color: black !important;
 }
+
+
+.errorCpf{
+  color: red;
+}
+
+.errorValores{
+  color:red;
+}
+
+.errorEmail{
+  color:red;
+}

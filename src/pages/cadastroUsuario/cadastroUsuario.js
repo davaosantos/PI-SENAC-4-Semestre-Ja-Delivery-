@@ -6,45 +6,91 @@ import facebook from "../../assets/facebook(1).png"
 import instagram from "../../assets/instagram(1).png"
 import twitter from "../../assets/twitter(1).png"
 import { useState, useEffect } from 'react';
-import { collection, addDoc } from "firebase/firestore";
+import { collection, addDoc, getDocs } from "firebase/firestore";
 import { db, auth } from './../../firebase';
 import { signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'firebase/auth';
 import Header from '../../components/Header';
 
+import { userSchema, cpfSchema } from '../../validations/UserValidation';
 
-const initialState = {
-  nome:"",
-  email : "",
-  telefone : "",
-  data_nascimento:"",
-  tipo_usuario:"",
-  senha:""
-};
+
 
 export default function CadastroUsuario(){
+    const [users, setUsers] = useState([]);
+
+    useEffect(() => {
+      const getUsers = async () => {
+        const data = await getDocs(usersCollectionRef);
+        setUsers(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+      };
+      getUsers();
+    }, []);
 
     const [newNome, setNewNome]= useState("");
     const [newTelefone, setNewTelefone]= useState(0);
     const [newEmail, setNewEmail]= useState("");
     const [newDataNascimento, setNewDataNascimento]= useState("");
     const [newTipoUsuario, setNewTipoUsuario]= useState("");
+    const [newCpf, setNewCpf]= useState("");
     const [newSenha, setNewSenha]= useState("");
+    const [errorCpf, setErrorCpf ] = useState("");
+    const [errorValores , setErrorValores] = useState("");
+    const [errorEmail, setErrorEmail] = useState("");
+    
+    //verificação de email
+    let emailValid = true;
 
     const usersCollectionRef = collection(db, "users");
 
     const createUser = async () =>{
-      await addDoc(usersCollectionRef, {nome: newNome, telefone: newTelefone, 
-        email:newEmail, data_nascimento:newDataNascimento, tipo_usuario:newTipoUsuario, 
-         senha: newSenha})
+      let formData = {
+        nome: newNome,
+        telefone : newTelefone,
+        email: newEmail,
+        data_nascimento : newDataNascimento,
+        tipo_usuario:newTipoUsuario,
+        cpf:newCpf,
+        senha:newSenha
+      }
+      
+      let formCpf = {
+        cpf: newCpf
+      }
 
-         const signIn = () =>{
-          createUserWithEmailAndPassword(auth, newEmail, newSenha)
-          .then(auth=> console.log(auth))
-          .catch(error => console.error(error))
-         }
+      //Itera o banco para verificar se o email já existe
+      for(const user of users){
+        if(user.email == newEmail){
+          emailValid = false;
+          setErrorEmail("Email já cadastrado")
+        }
+      };
 
-         signIn();
-         alert("Usuario cadastrado com sucesso");
+      const isValid = await userSchema.isValid(formData);
+      const cpfValid = await cpfSchema.isValid(formCpf);
+      console.log(cpfValid + "cpf");
+      console.log(isValid + "form");
+
+      if(!cpfValid){
+        setErrorCpf("CPF Inválido");
+      }
+      
+      if(isValid && emailValid){
+        await addDoc(usersCollectionRef, {nome: newNome, telefone: newTelefone, 
+          email:newEmail, data_nascimento:newDataNascimento, tipo_usuario:newTipoUsuario,cpf:newCpf, 
+           senha: newSenha})
+  
+           const signIn = () =>{
+            createUserWithEmailAndPassword(auth, newEmail, newSenha)
+            .then(auth=> console.log(auth))
+            .catch(error => console.error(error))
+           }
+  
+           signIn();
+           alert("Usuario cadastrado com sucesso");
+      }else{
+        setErrorValores("Revise os valores do cadastro")
+      }
+
     }
     
 
@@ -84,6 +130,7 @@ export default function CadastroUsuario(){
           type="email"
           onChange={(event) => {setNewEmail(event.target.value)}}
         />
+        {errorEmail && <p className="errorEmail">{errorEmail}</p>}
       </FormGroup>
     </Col>
 
@@ -117,6 +164,23 @@ export default function CadastroUsuario(){
       </FormGroup>
     </Col>
 
+    <Col md={6}>
+      <FormGroup>
+        <Label for="CPF">
+          CPF
+        </Label>
+        <Input
+          id="cpf"
+          name="cpf"
+          placeholder="CPF"
+          type="text"
+          onChange={(event) => {setNewCpf(event.target.value)}}
+        />
+      </FormGroup>
+      {errorCpf && <p className="errorCpf">{errorCpf}</p>}
+    </Col>
+    
+
     <Col sm={10}>
         <FormGroup>
         <Label for="tipo_usuario">Tipo de usuário</Label>
@@ -124,6 +188,7 @@ export default function CadastroUsuario(){
         id="tipo_usuario"
         name="tipo_usuario"
         type="select"
+        defaultValue={"Estoquista"}
         onChange={(event) => {setNewTipoUsuario(event.target.value)}}
       >
         <option>
@@ -155,6 +220,8 @@ export default function CadastroUsuario(){
   <Button onClick={createUser}>
     Sign in
   </Button>
+
+  {errorValores && <p className="errorValores">{errorValores}</p>}
   
 </Form>
     </section>

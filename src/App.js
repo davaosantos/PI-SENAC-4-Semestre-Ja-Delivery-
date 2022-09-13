@@ -15,11 +15,12 @@ function App() {
 
     const [newEmail, setNewEmail]= useState("");
     const [newSenha, setNewSenha]= useState("");
+    const [error, setError]= useState("");
 
     const loginUser = async () => {
       await signInWithEmailAndPassword(auth, newEmail, newSenha)
       .then((auth) => {navigate('/home')} )
-      .catch((err) => console.log(err))
+      .catch((err) => setError(err.message))
     }
 
   return (
@@ -28,6 +29,7 @@ function App() {
     <img src={logoJaDelivery} alt="" />
   </div>
   <div className="text-center mt-4 name jaDeliveryTexto">Já Delivery</div>
+  {error && <p className="errorLogin">{error}</p>}
   <form className="p-3 mt-3">
     <div className="form-field d-flex align-items-center">
       <span className="far fa-user" />

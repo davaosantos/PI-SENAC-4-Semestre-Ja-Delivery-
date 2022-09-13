@@ -157,5 +157,11 @@ body {
   overflow: visible;
   font-family: Kristen ITC;
   color: rgba(255,255,255,1);
+  margin-left: 20px !important;
+}
+
+.errorLogin{
+  text-align: center;
+  color: white;
 }
 
