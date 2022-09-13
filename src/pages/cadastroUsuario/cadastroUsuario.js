@@ -16,8 +16,11 @@ import { userSchema, cpfSchema } from '../../validations/UserValidation';
 
 
 export default function CadastroUsuario(){
+
+    //Array de usuarios
     const [users, setUsers] = useState([]);
 
+    //Faz o get dos usuários já cadastrados
     useEffect(() => {
       const getUsers = async () => {
         const data = await getDocs(usersCollectionRef);
@@ -26,6 +29,8 @@ export default function CadastroUsuario(){
       getUsers();
     }, []);
 
+
+    //Valores dos inputs
     const [newNome, setNewNome]= useState("");
     const [newTelefone, setNewTelefone]= useState(0);
     const [newEmail, setNewEmail]= useState("");
@@ -33,6 +38,8 @@ export default function CadastroUsuario(){
     const [newTipoUsuario, setNewTipoUsuario]= useState("");
     const [newCpf, setNewCpf]= useState("");
     const [newSenha, setNewSenha]= useState("");
+
+    //Valores dos erros
     const [errorCpf, setErrorCpf ] = useState("");
     const [errorValores , setErrorValores] = useState("");
     const [errorEmail, setErrorEmail] = useState("");
@@ -40,9 +47,13 @@ export default function CadastroUsuario(){
     //verificação de email
     let emailValid = true;
 
+    //Cria uma referencia para o banco
     const usersCollectionRef = collection(db, "users");
 
+    //Cria os usuarios
     const createUser = async () =>{
+
+      //Formulario para validação 
       let formData = {
         nome: newNome,
         telefone : newTelefone,
@@ -53,6 +64,8 @@ export default function CadastroUsuario(){
         senha:newSenha
       }
       
+
+      //Objeto cpf para validação
       let formCpf = {
         cpf: newCpf
       }
@@ -65,15 +78,18 @@ export default function CadastroUsuario(){
         }
       };
 
+      //Verifica se o formulário é valido
       const isValid = await userSchema.isValid(formData);
-      const cpfValid = await cpfSchema.isValid(formCpf);
-      console.log(cpfValid + "cpf");
-      console.log(isValid + "form");
 
+      //Verifica se o cpf é valido
+      const cpfValid = await cpfSchema.isValid(formCpf);
+
+      //Mensagem de erro CPF
       if(!cpfValid){
         setErrorCpf("CPF Inválido");
       }
       
+      //Se o formulario e o email forem validos
       if(isValid && emailValid){
         await addDoc(usersCollectionRef, {nome: newNome, telefone: newTelefone, 
           email:newEmail, data_nascimento:newDataNascimento, tipo_usuario:newTipoUsuario,cpf:newCpf, 

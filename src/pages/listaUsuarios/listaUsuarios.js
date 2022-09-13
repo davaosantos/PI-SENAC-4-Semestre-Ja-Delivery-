@@ -1,5 +1,13 @@
 import { useState, useEffect, React } from "react";
-import Header from '../../components/Header'
+import HeaderUser from "./../../components/HeaderUser"; 
+
+import '../../styles/home.css'
+import { BrowserRouter, Routes, Route  , Link} from 'react-router-dom';
+import logoJaDelivery  from "../../assets/pngtree-cartoon-delivery-staff_cb.png"
+import { signOut } from "firebase/auth";
+import { Button } from 'react-bootstrap';
+import { auth } from '../../firebase';
+import { useNavigate } from 'react-router-dom';
 
 import {
   collection,
@@ -8,8 +16,9 @@ import {
   getDocs,
   updateDoc,
 } from "firebase/firestore";
+
 import { async } from "@firebase/util";
-import { Label, Form, Table, Button, FormGroup, Col, Input } from "reactstrap";
+import { Label, Form, Table, FormGroup, Col, Input } from "reactstrap";
 
 import updateButton from "../../assets/pencil.png";
 
@@ -25,14 +34,7 @@ import {
 } from "mdb-react-ui-kit";
 
 import "../../styles/home.css";
-import {
-  BrowserRouter,
-  Routes,
-  Route,
-  Link,
-  useNavigate,
-} from "react-router-dom";
-import logoJaDelivery from "../../assets/pngtree-cartoon-delivery-staff_cb.png";
+
 import facebook from "../../assets/facebook(1).png";
 import instagram from "../../assets/instagram(1).png";
 import twitter from "../../assets/twitter(1).png";
@@ -41,6 +43,13 @@ import { db } from "../../firebase";
 import Modal from "react-modal";
 
 function ListaUsuarios() {
+
+    const navigate = useNavigate();
+    const logoutUser = async () => {
+        await auth.signOut();
+        navigate('/')
+      }
+
   //Constantes do update
   const [newNome, setNewNome] = useState("");
   const [newTelefone, setNewTelefone] = useState(0);
@@ -100,9 +109,83 @@ function ListaUsuarios() {
     getUsers();
   }, []);
 
+  const [query, setQuery] = useState("");
+  //console.log(users.filter(user => user.nome.toLowerCase().includes("fe")));
+
   return (
     <>
-      <Header/>
+          <header className="p-3 text-bg-dark">
+        <div className="container">
+          <div className="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+            <a
+              href="/"
+              className="d-flex align-items-center mb-2 mb-lg-0 text-white text-decoration-none"
+            >
+              <svg
+                className="bi me-2"
+                width={40}
+                height={32}
+                role="img"
+                aria-label="Bootstrap"
+              >
+                <use xlinkHref="#bootstrap" />
+              </svg>
+            </a>
+            <ul className="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+              <div>
+                <Link to='/home'>
+                <img
+                  src={logoJaDelivery}
+                  alt=""
+                  className="logoJaDelivery"
+                  height="45px"
+                />
+                </Link>
+              </div>
+              <li>
+                <Link to='/cadastroProduto' className="nav-link px-2 text-white">
+                  Cadastro Produto
+                </Link>
+              </li>
+              <li>
+                <a href="#" className="nav-link px-2 text-white">
+                  Lista Produtos
+                </a>
+              </li>
+              <li>
+                <Link to='/cadastroUsuario' href="#" className="nav-link px-2 text-white">
+                  Cadastrar Usuário
+                </Link>
+              </li>
+              <li>
+                <a href="#" className="nav-link px-2 text-white">
+                  Carrinho
+                </a>
+              </li>
+              <li>
+              <Link to='/listaUsuarios' className="nav-link px-2 text-white">
+                  Lista Usuários
+                </Link>
+              </li>
+            </ul>
+            <form className="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3" role="search">
+              <input
+                type="search"
+                className="form-control form-control-dark text-bg-dark"
+                placeholder="Search..."
+                aria-label="Search"
+                onChange={(e) => setQuery(e.target.value)}
+              />
+              
+            </form>
+            <div className="text-end">
+            <Button className='btnLogout' onClick={logoutUser}>
+                Logout
+            </Button>
+            </div>
+          </div>
+        </div>
+      </header>
 
       <section className="listaUsuariosRegistros">
         <div>
@@ -123,7 +206,8 @@ function ListaUsuarios() {
               </tr>
             </thead>
 
-            {users.map((user) => {
+            {users.filter(user => user.nome.toLowerCase().includes(query))
+            .map((user) => {
               return (
                 <tbody>
                   <tr>
