@@ -10,6 +10,7 @@ import { collection, addDoc, getDocs } from "firebase/firestore";
 import { db, auth } from './../../firebase';
 import { signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'firebase/auth';
 import Header from '../../components/Header';
+import Select from 'react-select'
 
 import { userSchema, cpfSchema } from '../../validations/UserValidation';
 
@@ -195,8 +196,7 @@ export default function CadastroUsuario(){
       </FormGroup>
       {errorCpf && <p className="errorCpf">{errorCpf}</p>}
     </Col>
-    
-
+  
     <Col sm={10}>
         <FormGroup>
         <Label for="tipo_usuario">Tipo de usuário</Label>
@@ -204,9 +204,9 @@ export default function CadastroUsuario(){
         id="tipo_usuario"
         name="tipo_usuario"
         type="select"
-        defaultValue={"Estoquista"}
         onChange={(event) => {setNewTipoUsuario(event.target.value)}}
       >
+        <option></option>
         <option>
           Administrador
         </option>
