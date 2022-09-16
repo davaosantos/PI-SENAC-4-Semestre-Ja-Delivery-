@@ -9,7 +9,7 @@ import { Button } from 'react-bootstrap';
 import { auth } from '../../firebase';
 import { useNavigate } from 'react-router-dom';
 
-import { updatePassword} from 'firebase/auth';
+//import {updatePassword} from 'firebase/auth';
 
 import {
   collection,
@@ -89,7 +89,7 @@ function ListaUsuarios() {
 
     if(isValid){
       await updateDoc(userDoc, newFields);
-      //updatePassword(userDoc.id, newSenha);
+     // updatePassword(userDoc.user, newSenha);
       alert("Usuario alterado com sucesso");
       window.location.reload();
     }else{
