@@ -9,6 +9,8 @@ import { Button } from 'react-bootstrap';
 import { auth } from '../../firebase';
 import { useNavigate } from 'react-router-dom';
 
+import { updatePassword} from 'firebase/auth';
+
 import {
   collection,
   deleteDoc,
@@ -76,7 +78,7 @@ function ListaUsuarios() {
     const newFields = {
       nome: newNome,
       telefone: newTelefone,
-      email: newEmail,
+      //email: newEmail,
       data_nascimento: newDataNascimento,
       tipo_usuario: newTipoUsuario,
       senha: newSenha,
@@ -87,6 +89,7 @@ function ListaUsuarios() {
 
     if(isValid){
       await updateDoc(userDoc, newFields);
+      //updatePassword(userDoc.id, newSenha);
       alert("Usuario alterado com sucesso");
       window.location.reload();
     }else{
@@ -100,6 +103,9 @@ function ListaUsuarios() {
 
   const [users, setUsers] = useState([]);
   const usersCollectionRef = collection(db, "users");
+
+  //Variavel para criar os indices na listagem
+  var number = 0;
 
   const deleteUser = async (id) => {
     const userDoc = doc(db, "users", id);
@@ -216,9 +222,10 @@ function ListaUsuarios() {
             {users.filter(user => user.nome.toLowerCase().includes(query))
             .map((user) => {
               return (
+
                 <tbody>
                   <tr>
-                    <th scope="row">{user.id}</th>
+                    <th scope="row">{number += 1}</th>
                     <td>{user.nome}</td>
                     <td>{user.telefone}</td>
                     <td>{user.email}</td>
@@ -288,6 +295,8 @@ function ListaUsuarios() {
                                     />
                                   </Col>
                                 </FormGroup>
+
+                                
 
                                 <FormGroup row>
                                   <Label for="tipo_usuario" sm={2}>
