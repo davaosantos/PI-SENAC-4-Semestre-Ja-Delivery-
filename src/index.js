@@ -28,6 +28,7 @@ root.render(
         <Route path='/carrinho' element></Route>
         <Route path='/home' element={<Home/>}></Route>
       </Routes>
+      
     </BrowserRouter>
   </React.StrictMode>
 );

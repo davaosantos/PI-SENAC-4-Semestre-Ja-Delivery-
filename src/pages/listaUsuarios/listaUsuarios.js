@@ -41,6 +41,7 @@ import twitter from "../../assets/twitter(1).png";
 
 import { db } from "../../firebase";
 import Modal from "react-modal";
+import { updateSchema } from "../../validations/UserValidation";
 
 function ListaUsuarios() {
 
@@ -81,9 +82,16 @@ function ListaUsuarios() {
       senha: newSenha,
       status: newStatus
     };
-    await updateDoc(userDoc, newFields);
-    alert("Usuario alterado com sucesso");
-    window.location.reload();
+
+    const isValid = await updateSchema.isValid(newFields);
+
+    if(isValid){
+      await updateDoc(userDoc, newFields);
+      alert("Usuario alterado com sucesso");
+      window.location.reload();
+    }else{
+      alert("Existem valores em branco")
+    }
   };
 
   const [basicModal, setBasicModal] = useState(false);
