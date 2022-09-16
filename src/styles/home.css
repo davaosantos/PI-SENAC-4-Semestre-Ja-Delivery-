@@ -135,6 +135,10 @@ footer{
   border-style: none;
 }
 
+.modalEditSaveBtn{
+  height: 40px !important;
+}
+
 .btnInativarUsuario{
   border-style: none;
   background-color: grey;

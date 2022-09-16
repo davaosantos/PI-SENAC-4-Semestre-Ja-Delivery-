@@ -110,7 +110,6 @@ function ListaUsuarios() {
   }, []);
 
   const [query, setQuery] = useState("");
-  //console.log(users.filter(user => user.nome.toLowerCase().includes("fe")));
 
   return (
     <>
@@ -264,24 +263,8 @@ function ListaUsuarios() {
                                 </FormGroup>
 
                                 <FormGroup row>
-                                  <Label for="email" sm={2}>
-                                    Email
-                                  </Label>
-                                  <Col sm={10}>
-                                    <Input
-                                      type="email"
-                                      name="email"
-                                      id="email"
-                                      placeholder="Email"
-                                      onChange={(event) => {
-                                        setNewEmail(event.target.value);
-                                      }}
-                                    />
-                                  </Col>
-                                </FormGroup>
-                                <FormGroup row>
                                   <Label for="data_nascimento" sm={2}>
-                                    D.O.B
+                                    Data Nasc.
                                   </Label>
                                   <Col sm={10}>
                                     <Input
@@ -310,7 +293,8 @@ function ListaUsuarios() {
                                       onChange={(event) => {
                                         setNewTipoUsuario(event.target.value);
                                       }}
-                                    >
+                                    >  
+                                      <option></option>
                                       <option>Administrador</option>
                                       <option>Estoquista</option>
                                     </Input>
@@ -348,25 +332,6 @@ function ListaUsuarios() {
                                         setNewSenha(event.target.value);
                                       }}
                                     />
-                                  </Col>
-                                </FormGroup>
-
-                                <FormGroup row>
-                                  <Label for="status" sm={2}>
-                                    status
-                                  </Label>
-                                  <Col sm={10}>
-                                    <Input
-                                      type="select"
-                                      name="status"
-                                      id="status"
-                                      onChange={(event) => {
-                                        setNewStatus(event.target.value);
-                                      }}
-                                    >
-                                      <option>Ativo</option>
-                                      <option>Inativo</option>
-                                    </Input>
                                   </Col>
                                 </FormGroup>
 
