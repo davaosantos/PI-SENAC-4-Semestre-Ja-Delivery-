@@ -11,6 +11,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import home from './pages/home/index';
 import CadastroUsuario from './pages/cadastroUsuario/cadastroUsuario';
 import CadastroProduto from './pages/cadastroProduto/cadastroProduto';
+import ListaProdutos from './pages/listaProdutos/listaProdutos';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -24,7 +25,7 @@ root.render(
         <Route path='/cadastroUsuario' element={<CadastroUsuario/>}></Route>
         <Route path='/' element></Route>
         <Route path='/listaUsuarios' element={<ListaUsuarios/>}></Route>
-        <Route path='/listagemProdutos' element > </Route>
+        <Route path='/listaProdutos' element={<ListaProdutos></ListaProdutos>} > </Route>
         <Route path='/carrinho' element></Route>
         <Route path='/home' element={<Home/>}></Route>
       </Routes>
