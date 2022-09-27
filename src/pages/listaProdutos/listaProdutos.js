@@ -136,11 +136,7 @@ return (
                 />
                 </Link>
               </div>
-              <li>
-                <Link to='/cadastroProduto' className="nav-link px-2 text-white">
-                  Cadastro Produto
-                </Link>
-              </li>
+
               <li>
                 <a href="#" className="nav-link px-2 text-white">
                   Lista Produtos
@@ -186,16 +182,18 @@ return (
           <Table dark>
             <thead>
 
-            <button className="btnAddProduct"><Link to='/cadastroProduto' className="nav-link px-2 text-white">
-                  +
-                </Link></button>
+            <div>Lista de produtos</div>
               <tr>
-                <th>#</th>
+                <th>Cod. Produto</th>
                 <th>Nome</th>
                 <th>Quantidade</th>
                 <th>Valor</th>
                 <th>Status</th>
                 <th>Ação</th>
+                <th><button className="btnAddProduct" >
+                <Link className="nav-link px-2 text-white" to='/cadastroProduto' >
+                  +
+                </Link></button></th>
               </tr>
             </thead>
 
@@ -210,6 +208,8 @@ return (
                     <td>{product.quantidade}</td>
                     <td>{product.valor}</td>
                     <td>{product.status}</td>
+                    
+  
 
                     <td class="tableUserData">
                       <Button className="buttonUpdateUser" onClick={toggleShow}>
@@ -353,6 +353,7 @@ return (
                         x
                       </Button>
                     </td>
+                    <td></td>
                   </tr>
                 </tbody>
               );

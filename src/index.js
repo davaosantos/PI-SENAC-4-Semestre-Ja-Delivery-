@@ -25,7 +25,7 @@ root.render(
         <Route path='/cadastroUsuario' element={<CadastroUsuario/>}></Route>
         <Route path='/' element></Route>
         <Route path='/listaUsuarios' element={<ListaUsuarios/>}></Route>
-        <Route path='/listaProdutos' element={<ListaProdutos></ListaProdutos>} > </Route>
+        <Route path='/listaProdutos' element={<ListaProdutos/>} > </Route>
         <Route path='/carrinho' element></Route>
         <Route path='/home' element={<Home/>}></Route>
       </Routes>

@@ -43,15 +43,11 @@ export default function Header(){
             />
             </Link>
           </div>
+       
           <li>
-            <Link to='/cadastroProduto' className="nav-link px-2 text-white">
-              Cadastro Produto
+          <Link to='/listaProdutos' href="#" className="nav-link px-2 text-white">
+                  Lista Produtos
             </Link>
-          </li>
-          <li>
-            <a href="#" className="nav-link px-2 text-white">
-              Lista Produtos
-            </a>
           </li>
           <li>
             <Link to='/cadastroUsuario' href="#" className="nav-link px-2 text-white">

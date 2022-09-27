@@ -15,6 +15,7 @@ import {
   collection,
   deleteDoc,
   doc,
+  getDoc,
   getDocs,
   updateDoc,
 } from "firebase/firestore";
@@ -44,6 +45,7 @@ import twitter from "../../assets/twitter(1).png";
 import { db } from "../../firebase";
 import Modal from "react-modal";
 import { updateSchema } from "../../validations/UserValidation";
+import { userSchema, modalSchema } from './../../validations/UserValidation';
 
 function ListaUsuarios() {
 
@@ -53,6 +55,21 @@ function ListaUsuarios() {
         navigate('/')
       }
 
+
+    const [modelData, setModelData] = useState({
+        id: "",
+        nome : "",
+        telefone : "",
+        email : "",
+        data_nascimento : "",
+        tipo_usuario : "",
+        cpf : "",
+        senha : "",
+        status : ""
+      });
+
+      const[modelId , setModelId] = useState("");
+
   //Constantes do update
   const [newNome, setNewNome] = useState("");
   const [newTelefone, setNewTelefone] = useState(0);
@@ -61,6 +78,29 @@ function ListaUsuarios() {
   const [newTipoUsuario, setNewTipoUsuario] = useState("");
   const [newSenha, setNewSenha] = useState("");
   const [newStatus, setNewStatus] = useState("");
+  const [newCpf, setNewCpf] = useState(0);
+
+  //CARREGA DADOS
+  const carregaDados = async (user) =>{
+    const docRef = doc(db, "users", user.id)
+    const docSnap = await getDoc(docRef);
+
+    docSnap.data();
+
+    toggleShow();
+
+    let docId = JSON.stringify(docSnap.id);
+    docId = JSON.parse(docId);
+    
+    console.log("docsnap ida" + docSnap.id);
+    console.log(docSnap.data());
+    setModelData(docSnap.data());
+    setModelId(docId);
+
+    console.log(docSnap.nome);
+    console.log("Model data" + modelData.id + docId + modelData.nome + modelData.data_nascimento);
+
+  }
 
   //Camada de update
 
@@ -68,27 +108,81 @@ function ListaUsuarios() {
     id,
     nome,
     telefone,
-    email,
+    //email,
     data_nascimento,
     tipo_usuario,
+   // cpf,
     senha,
-    status
+    //status
   ) => {
     const userDoc = doc(db, "users", id);
-    const newFields = {
-      nome: newNome,
-      telefone: newTelefone,
-      //email: newEmail,
-      data_nascimento: newDataNascimento,
-      tipo_usuario: newTipoUsuario,
-      senha: newSenha,
-      status: newStatus
+
+    const oldFields = {
+      nome: modelData.nome,
+      telefone: modelData.telefone,
+      email : modelData.email, // nao altera
+      data_nascimento: modelData.data_nascimento,
+      tipo_usuario: modelData.tipo_usuario,
+      cpf : modelData.cpf, //nao altera
+      senha: modelData.senha,
+      //status: modelData.status // nao altera
+    }
+
+    //                0         1           2                 3               4
+    let newFields = [newNome, newTelefone, newDataNascimento, newTipoUsuario, newSenha];
+    let index;
+
+    console.log(newFields[0]);
+
+    for(index = 0; index < newFields.length; index ++){
+      if(newFields[index] != ""){
+        let escolha = index;
+
+        switch(escolha){
+          case 0 : 
+            oldFields.nome = newNome;
+            break;
+
+          case 1 : 
+            oldFields.telefone = newTelefone;
+            break;
+
+          case 2 : 
+            oldFields.data_nascimento = newDataNascimento;
+            break;
+
+          case 3 : 
+            oldFields.tipo_usuario = newTipoUsuario;
+            break;
+
+          case 4 : 
+            oldFields.senha = newSenha;
+            break;
+
+          default:
+            console.log("Valores em branco");
+        }
+      }
+    }
+
+    const newModal = {
+      nome: newNome
     };
 
-    const isValid = await updateSchema.isValid(newFields);
+    let fields = JSON.stringify(newFields);
+
+
+    console.log("Novos Campos" + fields)
+    console.log(oldFields)
+    const isValid = await updateSchema.isValid(oldFields);
+    const eValid = await userSchema.isValid(newFields);
+  
+
+    console.log("isValid OldFields " + isValid);
+    console.log("É valida " + eValid);
 
     if(isValid){
-      await updateDoc(userDoc, newFields);
+      await updateDoc(userDoc, oldFields);
      // updatePassword(userDoc.user, newSenha);
       alert("Usuario alterado com sucesso");
       window.location.reload();
@@ -155,15 +249,11 @@ function ListaUsuarios() {
                 />
                 </Link>
               </div>
+              
               <li>
-                <Link to='/cadastroProduto' className="nav-link px-2 text-white">
-                  Cadastro Produto
-                </Link>
-              </li>
-              <li>
-                <a href="#" className="nav-link px-2 text-white">
+              <Link to='/listaProdutos' href="#" className="nav-link px-2 text-white">
                   Lista Produtos
-                </a>
+            </Link>
               </li>
               <li>
                 <Link to='/cadastroUsuario' href="#" className="nav-link px-2 text-white">
@@ -211,6 +301,7 @@ function ListaUsuarios() {
                 <th>Email</th>
                 <th>Data nascimento</th>
                 <th>Tipo Usuario</th>
+                <th>CPF</th>
                 <th>Senha</th>
 
                 <th>Status</th>
@@ -231,12 +322,13 @@ function ListaUsuarios() {
                     <td>{user.email}</td>
                     <td>{user.data_nascimento}</td>
                     <td>{user.tipo_usuario}</td>
+                    <td>{user.cpf}</td>
                     <td>{user.senha}</td>
 
                     <td>{user.status}</td>
 
                     <td class="tableUserData">
-                      <Button className="buttonUpdateUser" onClick={toggleShow}>
+                      <Button className="buttonUpdateUser" onClick={() => carregaDados(user)}>
                         <img
                           height="10px"
                           width="10px"
@@ -259,7 +351,24 @@ function ListaUsuarios() {
                               ></MDBBtn>
                             </MDBModalHeader>
                             <MDBModalBody>
+                              
                               <Form className="form-update-user">
+                              <FormGroup row>
+                                  <Label for="id" sm={2}>
+                                    ID
+                                  </Label>
+                                  <Col sm={10}>
+                                    <Input
+                                      type="text"
+                                      name="id"
+                                      id="id"
+                                      placeholder="id"
+                                      value={modelId}
+                                      disabled="true"
+                                    />
+                                  </Col>
+                                </FormGroup>
+
                                 <FormGroup row>
                                   <Label for="nome" sm={2}>
                                     Nome
@@ -270,8 +379,46 @@ function ListaUsuarios() {
                                       name="nome"
                                       id="nome"
                                       placeholder="Nome"
+                                      defaultValue={modelData.nome}
                                       onChange={(event) => {
                                         setNewNome(event.target.value);
+                                      }}
+                                    />
+                                  </Col>
+                                </FormGroup>
+
+                                <FormGroup row>
+                                  <Label for="telefone" sm={2}>
+                                      Telefone
+                                  </Label>
+                                  <Col sm={10}>
+                                    <Input
+                                      type="number"
+                                      name="telefone"
+                                      id="telefone"
+                                      placeholder="Telefone"
+                                      defaultValue={modelData.telefone}
+                                      onChange={(event) => {
+                                        setNewTelefone(event.target.value);
+                                      }}
+                                    />
+                                  </Col>
+                                </FormGroup>
+
+                                <FormGroup row>
+                                  <Label for="email" sm={2}>
+                                    Email
+                                  </Label>
+                                  <Col sm={10}>
+                                    <Input
+                                      type="text"
+                                      name="email"
+                                      id="email"
+                                      placeholder="email"
+                                      disabled="true"
+                                      defaultValue={modelData.email}
+                                      onChange={(event) => {
+                                        setNewEmail(event.target.value);
                                       }}
                                     />
                                   </Col>
@@ -287,6 +434,7 @@ function ListaUsuarios() {
                                       name="data_nascimento"
                                       id="data_nascimento"
                                       placeholder="Data de nascimento"
+                                      defaultValue={modelData.data_nascimento}
                                       onChange={(event) => {
                                         setNewDataNascimento(
                                           event.target.value
@@ -307,6 +455,7 @@ function ListaUsuarios() {
                                       type="select"
                                       name="select"
                                       id="exampleSelect"
+                                      defaultValue={modelData.tipo_usuario}
                                       onChange={(event) => {
                                         setNewTipoUsuario(event.target.value);
                                       }}
@@ -318,22 +467,26 @@ function ListaUsuarios() {
                                   </Col>
                                 </FormGroup>
 
+
                                 <FormGroup row>
-                                  <Label for="telefone" sm={2}>
-                                    Telefone
+                                  <Label for="CPF" sm={2}>
+                                      CPF
                                   </Label>
                                   <Col sm={10}>
                                     <Input
-                                      type="tel"
-                                      name="telefone"
-                                      id="telefone"
-                                      placeholder="Telefone"
+                                      type="number"
+                                      name="cpf"
+                                      id="cpf"
+                                      placeholder="CPF"
+                                      defaultValue={modelData.cpf}
+                                      disabled="true"
                                       onChange={(event) => {
-                                        setNewTelefone(event.target.value);
+                                        setNewCpf(event.target.value);
                                       }}
                                     />
                                   </Col>
                                 </FormGroup>
+
 
                                 <FormGroup row>
                                   <Label for="senha" sm={2}>
@@ -341,16 +494,20 @@ function ListaUsuarios() {
                                   </Label>
                                   <Col sm={10}>
                                     <Input
-                                      type="password"
+                                      type="text"
                                       name="senha"
                                       id="senha"
                                       placeholder="senha"
+                                      defaultValue={modelData.senha}
                                       onChange={(event) => {
                                         setNewSenha(event.target.value);
                                       }}
                                     />
                                   </Col>
                                 </FormGroup>
+
+                                
+                        
 
                               </Form>
                             </MDBModalBody>
@@ -367,7 +524,7 @@ function ListaUsuarios() {
                                 className="modalEditSaveBtn"
                                 onClick={() => {
                                   updateUser(
-                                    user.id,
+                                    modelId,
                                     user.nome,
                                     user.telefone,
                                     "",

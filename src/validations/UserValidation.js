@@ -19,6 +19,14 @@ export const updateSchema = yup.object().shape({
     senha: yup.string().required("Insira uma senha")
 });
 
+export const modalSchema = yup.object().shape({
+    nome: yup.string().required("Digite o nome")
+});
+
+
+
+
+
 export const cpfSchema = yup.object().shape({
     cpf: yup.string().min(11).max(11).required()
 });
