@@ -7,10 +7,12 @@ import instagram from "../../assets/instagram(1).png"
 import twitter from "../../assets/twitter(1).png"
 import { useState, useEffect } from 'react';
 import { collection, addDoc, getDocs } from "firebase/firestore";
-import { db, auth } from './../../firebase';
+import { db, auth, storage } from './../../firebase';
 import { signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'firebase/auth';
 import Header from '../../components/Header';
 import Select from 'react-select'
+import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
+
 
 
 export default function CadastroProduto(){
@@ -33,6 +35,38 @@ export default function CadastroProduto(){
     const [newQuantidade, setNewQuantidade]= useState(0);
     const [newValor, setNewValor]= useState(0);
     const [newStatus, setNewStatus]= useState("");
+    
+    const [imgUrl , setImgUrl] = useState("");
+    const [progress , setProgress] = useState(0);
+
+    const handleUpload = (event) =>{
+      event.preventDefault(); // para nao recarregar a pag
+
+      console.log(event.target[6]?.files[0]);
+      const file = event.target[6]?.files[0]; // selecionar primeira imagem
+
+      
+      if(!file) return;
+
+      const storageRef = ref(storage, `ìmages/${file.name}`)
+      const uploadTask = uploadBytesResumable(storageRef, file)
+
+      uploadTask.on(
+        "state_changed",
+        snapshot => {
+          const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+          setProgress(progress)
+          console.log(progress)
+        }, error =>{
+          alert(error.message)
+        },
+        () => {
+          getDownloadURL(uploadTask.snapshot.ref).then(url => {
+            setImgUrl(url)
+          })
+        }
+      )
+    }
 
    
 
@@ -86,14 +120,14 @@ export default function CadastroProduto(){
     <Header/>
 
     <section className='FormUsuario'>
-    <Form>
+    <Form onSubmit={handleUpload}>
       
     
   <Row>
   <Col md={6}>
       <FormGroup>
         <Label for="nome">
-          Nome
+          Nome do produto
         </Label>
         <Input
           id="nome"
@@ -148,6 +182,36 @@ export default function CadastroProduto(){
         />
       </FormGroup>
     </Col>
+
+    <Col md={6}>
+      <FormGroup>
+        <Label for="avaliacao">
+          Avaliação
+        </Label>
+        <Input
+          id="avaliacao"
+          name="avaliacao"
+          placeholder="Avaliacao"
+          type="text"
+          onChange={(event) => {setNewStatus(event.target.value)}}
+        />
+      </FormGroup>
+    </Col>
+
+    <FormGroup>
+          <Label for="descricao">Descrição</Label>
+          <Input type="textarea" name="text" id="exampleText" rows={1.5}/>
+    </FormGroup>
+    
+    <FormGroup>
+            <Label for="imagem">File</Label>
+            <Input type="file" name="file" id="imgProduto"></Input>
+            <br></br>
+            <Button type="submit">Enviar Foto</Button>
+            <br></br>
+            {!imgUrl && <progress value={progress} max="100"/>}
+            {imgUrl && <img src={imgUrl} alt="imagem" height={100}/>}
+    </FormGroup>
 	
   </Row>
   
