@@ -15,6 +15,7 @@ import {
   collection,
   deleteDoc,
   doc,
+  getDoc,
   getDocs,
   updateDoc,
 } from "firebase/firestore";
@@ -43,6 +44,7 @@ import twitter from "../../assets/twitter(1).png";
 
 import { db } from "../../firebase";
 import Modal from "react-modal";
+import { productSchema } from './../../validations/ProductValidation';
 
 function ListaProdutos() {
 
@@ -52,38 +54,122 @@ function ListaProdutos() {
         navigate('/')
       }
 
+      const [modelData, setModelData] = useState({
+        id: "",
+        nome : "",
+        avaliacao : "",
+        descricao : "",
+        preco : "",
+        quantidade : ""
+      });
+
+      const[modelId , setModelId] = useState("");
+
   //Constantes do update
-   const [newNome, setNewNome]= useState("");
+    const [newNome, setNewNome]= useState("");
+    const [newAvaliacao, setNewAvaliacao]= useState("");
+    const [newDescricao, setNewDescricao]= useState("");
+    const [newPreco, setNewPreco]= useState(0);
     const [newQuantidade, setNewQuantidade]= useState(0);
-    const [newValor, setNewValor]= useState(0);
     const [newStatus, setNewStatus]= useState("");
+
+    //CARREGA DADOS
+  const carregaDados = async (product) =>{
+    const docRef = doc(db, "products", product.id)
+    const docSnap = await getDoc(docRef);
+
+    docSnap.data();
+
+    toggleShow();
+
+    let docId = JSON.stringify(docSnap.id);
+    docId = JSON.parse(docId);
+    
+    console.log("docsnap ida" + docSnap.id);
+    console.log(docSnap.data());
+    setModelData(docSnap.data());
+    setModelId(docId);
+
+    console.log(docSnap.nome);
+    console.log("Model data" + modelData.id + docId + modelData.nome + modelData.data_nascimento);
+
+  }
 
   //Camada de update
 
   const updateProducts = async (
     id,
     nome,
+    avaliacao,
+    descricao,
+    preco,
     quantidade,
-    valor,
     status
   ) => {
     const productDoc = doc(db, "products", id);
+    
     const newFields = {
-      nome: newNome,
-      quantidade: newQuantidade,
-	  valor: newValor,
-      status : newStatus
-    };
+      nome: modelData.nome,
+      avaliacao: modelData.avaliacao,
+      descricao : modelData.descricao, 
+      preco: modelData.preco,
+      quantidade: modelData.quantidade,
+      status: modelData.status, // nao altera
+    }
 
+     //                0         1           2                 3               4
+     let auxNewFields = [newNome, newAvaliacao, newDescricao, newPreco, newQuantidade];
+     let index;
+ 
+     console.log(auxNewFields[0]);
+ 
+     for(index = 0; index < auxNewFields.length; index ++){
+       if(auxNewFields[index] != ""){
+         let escolha = index;
+ 
+         switch(escolha){
+           case 0 : 
+            newFields.nome = newNome;
+             break;
+ 
+           case 1 : 
+           newFields.avaliacao = newAvaliacao;
+             break;
+ 
+           case 2 : 
+           newFields.descricao = newDescricao;
+             break;
+ 
+           case 3 : 
+           newFields.preco = newPreco;
+             break;
+ 
+           case 4 : 
+           newFields.quantidade = newQuantidade;
+             break;
+ 
+           default:
+             console.log("Valores em branco");
+         }
+       }
+     }
+
+     const isValid = await productSchema.isValid(newFields);
+
+
+     if(isValid){
       await updateDoc(productDoc, newFields);
       alert("Produto alterado com sucesso");
       window.location.reload();
+     }
     }
 
   const [basicModal, setBasicModal] = useState(false);
 
   const toggleShow = () => setBasicModal(!basicModal);
 
+
+  //constante de produtos
   const [products, setProducts] = useState([]);
   const productsCollectionRef = collection(db, "products");
 
@@ -206,13 +292,13 @@ return (
                     <th scope="row">{product.id}</th>
                     <td>{product.nome}</td>
                     <td>{product.quantidade}</td>
-                    <td>{product.valor}</td>
+                    <td>{product.preco}</td>
                     <td>{product.status}</td>
                     
   
 
                     <td class="tableUserData">
-                      <Button className="buttonUpdateUser" onClick={toggleShow}>
+                      <Button className="buttonUpdateUser" onClick={() => carregaDados(product)}>
                         <img
                           height="10px"
                           width="10px"
@@ -236,6 +322,22 @@ return (
                             </MDBModalHeader>
                             <MDBModalBody>
                               <Form className="form-update-user">
+                              <FormGroup row>
+                                  <Label for="id" sm={2}>
+                                    ID
+                                  </Label>
+                                  <Col sm={10}>
+                                    <Input
+                                      type="text"
+                                      name="id"
+                                      id="id"
+                                      placeholder="id"
+                                      value={modelId}
+                                      disabled="true"
+                                    />
+                                  </Col>
+                                </FormGroup>
+
                                 <FormGroup row>
                                   <Label for="nome" sm={2}>
                                     Nome
@@ -246,12 +348,57 @@ return (
                                       name="nome"
                                       id="nome"
                                       placeholder="Nome"
+                                      defaultValue={modelData.nome}
                                       onChange={(event) => {
                                         setNewNome(event.target.value);
                                       }}
                                     />
                                   </Col>
                                 </FormGroup>
+
+                                <FormGroup row>
+                                  <Label for="avaliacao" sm={2}>
+                                    Tipo
+                                  </Label>
+                                  <Col sm={10}>
+                                    <Input
+                                      type="select"
+                                      name="avaliacao"
+                                      id="avaliacao"
+                                      defaultValue={modelData.avaliacao}
+                                      onChange={(event) => {
+                                        setNewAvaliacao(event.target.value);
+                                      }}
+                                    >  
+                                      <option></option>
+                                      <option>0</option>
+                                      <option>0.5</option>
+                                      <option>1.0</option>
+                                      <option>1.5</option>
+                                      <option>2.0</option>
+                                      <option>2.5</option>
+                                      <option>3.0</option>
+                                      <option>3.5</option>
+                                      <option>4.0</option>
+                                      <option>4.5</option>
+                                      <option>5.0</option>
+                                    </Input>
+                                  </Col>
+                                </FormGroup>
+
+                                <FormGroup>
+                                    <Label for="descricao">Descrição :</Label>
+                                    <Input 
+                                    type="textarea" 
+                                    placeholder="Descrição"
+                                    name="descricao" 
+                                    defaultValue={modelData.descricao}
+                                    id="descricao"                              
+                                    rows={4}
+                                    onChange={(event) => {
+                                      setNewDescricao(event.target.value);
+                                    }}/>
+                              </FormGroup>
 
                                 <FormGroup row>
                                   <Label for="quantidade" sm={2}>
@@ -263,6 +410,7 @@ return (
                                       name="quantidade"
                                       id="quantidade"
                                       placeholder="Quantidade"
+                                      defaultValue={modelData.quantidade}
                                       onChange={(event) => {
                                         setNewQuantidade(
                                           event.target.value
@@ -279,11 +427,12 @@ return (
                                   <Col sm={10}>
                                     <Input
                                       type="number"
-                                      name="valor"
-                                      id="valor"
-                                      placeholder="valor"
+                                      name="preco"
+                                      id="preco"
+                                      placeholder="Valor"
+                                      defaultValue={modelData.preco}
                                       onChange={(event) => {
-                                        setNewValor(
+                                        setNewPreco(
                                           event.target.value
                                         );
                                       }}
@@ -292,16 +441,17 @@ return (
                                 </FormGroup>
 
                                 
-
                                 <FormGroup row>
                                   <Label for="status" sm={2}>
                                     Tipo
                                   </Label>
                                   <Col sm={10}>
                                     <Input
-                                      type="select"
-                                      name="select"
-                                      id="exampleSelect"
+                                      type="status"
+                                      name="status"
+                                      id="status"
+                                      disabled="true"
+                                      defaultValue={modelData.status}
                                       onChange={(event) => {
                                         setNewStatus(event.target.value);
                                       }}
