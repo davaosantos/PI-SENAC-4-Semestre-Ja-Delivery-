@@ -85,16 +85,7 @@ function ListaUsuarios() {
       status: newStatus
     };
 
-    const isValid = await updateSchema.isValid(newFields);
-
-    if(isValid){
-      await updateDoc(userDoc, newFields);
-     // updatePassword(userDoc.user, newSenha);
-      alert("Usuario alterado com sucesso");
-      window.location.reload();
-    }else{
-      alert("Existem valores em branco")
-    }
+    
   };
 
   const [basicModal, setBasicModal] = useState(false);
