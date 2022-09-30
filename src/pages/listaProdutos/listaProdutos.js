@@ -87,7 +87,14 @@ function ListaProdutos() {
   const [products, setProducts] = useState([]);
   const productsCollectionRef = collection(db, "products");
 
-  
+  //Variavel para criar os indices na listagem
+  var number = 0;
+
+  const deleteProduct = async (id) => {
+    const productDoc = doc(db, "products", id);
+    await deleteDoc(productDoc);
+    alert("Produto deletado");
+  };
 
   useEffect(() => {
     const getProducts = async () => {
