@@ -15,17 +15,7 @@ import Select from 'react-select'
 
 export default function CadastroProduto(){
 
-    //Array de produtos
-    const [products, setProducts] = useState([]);
-
-    //Faz o get dos produtos já cadastrados
-    useEffect(() => {
-      const getProducts = async () => {
-        const data = await getDocs(productsCollectionRef);
-        setProducts(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
-      };
-      getProducts();
-    }, []);
+    
 
 
     //Valores dos inputs
@@ -42,13 +32,7 @@ export default function CadastroProduto(){
     //Cria os usuarios
     const createProducts = async () =>{
 
-      //Formulario para validação 
-      let formData = {
-		nome : newNome,
-    quantidade : newQuantidade,
-		valor : newValor,
-		status : newStatus
-      }
+
 
       //Itera o banco para verificar se o email já existe
      /* for(const user of users){
