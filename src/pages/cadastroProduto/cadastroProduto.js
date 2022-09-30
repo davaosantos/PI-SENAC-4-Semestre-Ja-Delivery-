@@ -59,6 +59,7 @@ export default function CadastroProduto() {
   const [newQuantidade, setNewQuantidade] = useState(0);
   const [newStatus, setNewStatus] = useState("");
 
+  //Constantes de imagem
   const [imgUrl, setImgUrl] = useState("");
   const [progress, setProgress] = useState(0);
 
