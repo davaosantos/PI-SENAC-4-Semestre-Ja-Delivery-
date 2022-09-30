@@ -15,7 +15,17 @@ import Select from 'react-select'
 
 export default function CadastroProduto(){
 
-    
+    //Array de produtos
+    const [products, setProducts] = useState([]);
+
+    //Faz o get dos produtos já cadastrados
+    useEffect(() => {
+      const getProducts = async () => {
+        const data = await getDocs(productsCollectionRef);
+        setProducts(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+      };
+      getProducts();
+    }, []);
 
 
     //Valores dos inputs
