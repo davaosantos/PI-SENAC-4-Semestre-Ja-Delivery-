@@ -270,9 +270,7 @@ export default function CadastroProduto() {
             <FormGroup className="formCarregaImagem">
               
               <Input  className="InputImagens" type="file" name="file" id="imgProduto"></Input>
-              <br></br>
               <Button type="submit">Anexar</Button>
-              <br></br>
               {!imgUrl && <Progress className="barraProgresso" value={progress} />}
                
             </FormGroup>
@@ -281,8 +279,7 @@ export default function CadastroProduto() {
           </Row>
 
           
-          <br></br>
-          <Button onClick={createProducts}>Cadastrar</Button>
+          <Button className="btnCadastrarProdutoFinal" onClick={createProducts}>Cadastrar</Button>
           {errorNulo && <span className="errorNulo">{errorNulo}</span>}
           
         </Form>

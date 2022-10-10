@@ -240,3 +240,15 @@ footer{
   width: 200px;
   background-color: #FFA200 !important;
 }
+
+
+.listaCabeçalho{
+  font-size: larger;
+  color: #212529;
+  padding: 10px;
+  font-weight: bold;
+}
+
+.FormUsuario{
+  padding-bottom: 100px;
+}

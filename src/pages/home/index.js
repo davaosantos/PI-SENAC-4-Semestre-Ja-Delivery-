@@ -6,6 +6,7 @@ import facebook from "../../assets/facebook(1).png"
 import instagram from "../../assets/instagram(1).png"
 import twitter from "../../assets/twitter(1).png"
 
+
 import ProductSlider from '../../components/ProductSlider';
 import Header from './../../components/Header';
 

@@ -8,6 +8,7 @@ import { signOut } from "firebase/auth";
 import { Button } from 'react-bootstrap';
 import { auth } from '../../firebase';
 import { useNavigate } from 'react-router-dom';
+import cart from "../../assets/imagens/cart-69-24.png";
 
 //import {updatePassword} from 'firebase/auth';
 
@@ -260,16 +261,18 @@ function ListaUsuarios() {
                   Cadastrar Usuário
                 </Link>
               </li>
-              <li>
-                <a href="#" className="nav-link px-2 text-white">
-                  Carrinho
-                </a>
-              </li>
+
               <li>
               <Link to='/listaUsuarios' className="nav-link px-2 text-white">
                   Lista Usuários
                 </Link>
               </li>
+
+              <li>
+                <a href="#" className="nav-link px-2 text-white">
+                  <img src={cart}></img>
+                </a>
+               </li>
             </ul>
             <form className="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3" role="search">
               <input

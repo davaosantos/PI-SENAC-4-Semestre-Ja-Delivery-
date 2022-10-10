@@ -11,6 +11,7 @@ import { db, auth } from './../../firebase';
 import { signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'firebase/auth';
 import Header from '../../components/Header';
 import Select from 'react-select'
+import validaCpf from '../../validations/CpfValidation';
 
 import { userSchema, cpfSchema } from '../../validations/UserValidation';
 
@@ -83,15 +84,17 @@ export default function CadastroUsuario(){
       const isValid = await userSchema.isValid(formData);
 
       //Verifica se o cpf é valido
-      const cpfValid = await cpfSchema.isValid(formCpf);
+      //const cpfValid = await cpfSchema.isValid(formCpf);
+
+      let cpfValido = validaCpf(formCpf.cpf);
 
       //Mensagem de erro CPF
-      if(!cpfValid){
+      if(cpfValido != true){
         setErrorCpf("CPF Inválido");
       }
-      
+
       //Se o formulario e o email forem validos
-      if(isValid && emailValid){
+      if(isValid && emailValid && cpfValido == true){
         await addDoc(usersCollectionRef, {nome: newNome, telefone: newTelefone, 
           email:newEmail, data_nascimento:newDataNascimento, tipo_usuario:newTipoUsuario,cpf:newCpf, 
            senha: newSenha})
