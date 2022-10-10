@@ -43,7 +43,6 @@ import twitter from "../../assets/twitter(1).png";
 
 import { db } from "../../firebase";
 import Modal from "react-modal";
-import { updateSchema } from "../../validations/UserValidation";
 
 function ListaUsuarios() {
 
@@ -67,12 +66,11 @@ function ListaUsuarios() {
   const updateUser = async (
     id,
     nome,
-    telefone,
     email,
     data_nascimento,
     tipo_usuario,
-    senha,
-    status
+    telefone,
+    senha
   ) => {
     const userDoc = doc(db, "users", id);
     const newFields = {
@@ -85,16 +83,11 @@ function ListaUsuarios() {
       status: newStatus
     };
 
-    const isValid = await updateSchema.isValid(newFields);
+    //const isValid = await updateSchema.isValid(newFields);
 
-    if(isValid){
       await updateDoc(userDoc, newFields);
-     // updatePassword(userDoc.user, newSenha);
       alert("Usuario alterado com sucesso");
       window.location.reload();
-    }else{
-      alert("Existem valores em branco")
-    }
   };
 
   const [basicModal, setBasicModal] = useState(false);
@@ -105,7 +98,7 @@ function ListaUsuarios() {
   const usersCollectionRef = collection(db, "users");
 
   //Variavel para criar os indices na listagem
-  var number = 0;
+  //var number = 0;
 
   const deleteUser = async (id) => {
     const userDoc = doc(db, "users", id);
@@ -225,7 +218,7 @@ function ListaUsuarios() {
 
                 <tbody>
                   <tr>
-                    <th scope="row">{number += 1}</th>
+                    <th scope="row">{user.id}</th>
                     <td>{user.nome}</td>
                     <td>{user.telefone}</td>
                     <td>{user.email}</td>
@@ -369,9 +362,9 @@ function ListaUsuarios() {
                                   updateUser(
                                     user.id,
                                     user.nome,
+                                    user.data_nascimento,
+                                    user.tipo_usuario,
                                     user.telefone,
-                                    "",
-                                    "",
                                     user.senha
                                   );
                                 }}

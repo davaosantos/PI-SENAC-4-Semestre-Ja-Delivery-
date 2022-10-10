@@ -11,7 +11,7 @@ export const userSchema = yup.object().shape({
 });
 
 
-export const updateSchema = yup.object().shape({
+ export const updateSchema = yup.object().shape({
     nome: yup.string().required("Digite o nome"),
     telefone: yup.number().required("Digite o telefone"),
     data_nascimento: yup.date().required("Digite a data de nascimento"),
