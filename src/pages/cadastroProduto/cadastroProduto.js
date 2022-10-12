@@ -23,17 +23,23 @@ import twitter from "../../assets/twitter(1).png";
 import { useState, useEffect } from "react";
 import { collection, addDoc, getDocs } from "firebase/firestore";
 import { db, auth, storage } from "./../../firebase";
+import {getStorage, getDownloadURL} from "firebase/storage"
 import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
 } from "firebase/auth";
 import Header from "../../components/Header";
 import Select from "react-select";
-import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+import { ref, uploadBytesResumable } from "firebase/storage";
 import { nomeProductSchema, productSchema, descricaoProductSchema } from './../../validations/ProductValidation';
 import { Progress } from 'reactstrap';
+import CurrencyInput from 'react-currency-input-field';
 
 export default function CadastroProduto() {
+
+  //Constantes url imagem
+  const[fileUrl, setFileUrl] = useState(null);
+
   //Array de produtos
   const [products, setProducts] = useState([]);
 
@@ -62,7 +68,7 @@ export default function CadastroProduto() {
   const [imgUrl, setImgUrl] = useState("");
   const [progress, setProgress] = useState(0);
 
-  const handleUpload = (event) => {
+  const handleUpload = async (event) => {
     event.preventDefault(); // para nao recarregar a pag
 
     console.log(event.target[6]?.files[0]);
@@ -71,6 +77,7 @@ export default function CadastroProduto() {
     if (!file) return;
 
     const storageRef = ref(storage, `ìmages/${file.name}`);
+    const fileRef = storageRef.name;
     const uploadTask = uploadBytesResumable(storageRef, file);
 
     uploadTask.on(
@@ -87,6 +94,7 @@ export default function CadastroProduto() {
       () => {
         getDownloadURL(uploadTask.snapshot.ref).then((url) => {
           setImgUrl(url);
+          console.log(imgUrl);
         });
       }
     );
@@ -105,6 +113,7 @@ export default function CadastroProduto() {
       quantidade: newQuantidade,
       preco: newPreco,
       status: newStatus,
+      avatar: imgUrl
     };
 
     //Formulario para validação
@@ -140,6 +149,7 @@ export default function CadastroProduto() {
       quantidade: newQuantidade,
       preco: newPreco,
       status: newStatus,
+      avatar: imgUrl
     });
     //signIn();
     alert("Produto cadastrado com sucesso");
@@ -232,19 +242,33 @@ export default function CadastroProduto() {
             </Col>
 
             <Col md={6}>
+              
               <FormGroup>
                 <Label for="preco">Valor</Label>
-                <Input
-                  id="preco"
-                  name="preco"
-                  placeholder="Preço"
-                  type="number"
-                  onChange={(event) => {
-                    setNewPreco(event.target.value);
-                  }}
-                />
+
+              <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                  <span class="input-group-text">$</span>
+                </div>
+                <Input 
+                id="preco"
+                name="preco"
+                placeholder="Preço"
+                type="number"
+                onChange={(event) => {
+                  setNewPreco(event.target.value);
+                }}
+                class="form-control" aria-label="Amount (to the nearest dollar)"/>
+                <div class="input-group-append">
+                  <span class="input-group-text">.00</span>
+                </div>
+              </div>
               </FormGroup>
             </Col>
+
+            
+
+            
 
             <Col sm={10}>
                 <FormGroup>
