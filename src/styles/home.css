@@ -252,3 +252,10 @@ footer{
 .FormUsuario{
   padding-bottom: 100px;
 }
+
+@media only screen and (max-width: 600px) {
+  .footer-principal{
+    display: none !important;
+  };
+}
+
