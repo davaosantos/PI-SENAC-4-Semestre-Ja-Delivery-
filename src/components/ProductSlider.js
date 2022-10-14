@@ -17,7 +17,8 @@ import img5 from '../assets/imagens/heineken.jpg'
 import img6 from '../assets/imagens/smirnoff.jpg'
 import img7 from '../assets/imagens/pitu.webp'
 import { collection, getDocs } from "firebase/firestore";
-import { db } from "../firebase";
+import { db, storage } from "../firebase";
+import { ref } from "firebase/storage";
 
 
 
@@ -35,6 +36,7 @@ const ProductSlider = () => {
     };
     getProducts();
     console.log(products)
+
   
   }, []);
 
@@ -70,9 +72,10 @@ const ProductSlider = () => {
             >
     
                 {products.map((product) => {
+                    const gsReference = ref(storage, 'gs://bucket/images/stars.jpg');
                     return(
                         <SwiperSlide>
-                                <ProductCard data={{imgSrc: product.avatar, price:'R$' + product.preco, title:product.nome}}/>
+                                <ProductCard data={{description : product.descricao, imgSrc: product.avatar, price:'R$' + product.preco, title:product.nome}}/>
                         </SwiperSlide>
                     );
                 })}

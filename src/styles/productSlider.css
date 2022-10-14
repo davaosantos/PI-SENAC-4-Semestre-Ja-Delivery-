@@ -9,6 +9,20 @@
     background-color: #24272b !important;
 }
 
+.buttonCardDetail{
+    border-radius: 90px !important;
+    border-color: #FFA200;
+    width: 100px !important;
+    background-color: #24272b;
+}
+
+.buttonCardDetail :hover{
+    background-color: grey !important;
+}
+
+
+
+
 /*CSS do conteudo*/
 
 .cardPreco{

@@ -9,8 +9,11 @@ import twitter from "../../assets/twitter(1).png"
 
 import ProductSlider from '../../components/ProductSlider';
 import Header from './../../components/Header';
+import { useState } from 'react';
+import { MDBModal } from 'mdb-react-ui-kit';
 
 export default function Home(){
+  
     return(
         <>
   <Header/>
@@ -22,7 +25,6 @@ export default function Home(){
   <section className='carroselProdutos'>
       <ProductSlider/>
   </section>
-
 
   <footer className="footer-principal">
     <div className="container">
