@@ -65,11 +65,11 @@ const Detalhes = props =>{
                 {data.title}
               </Typography>
               <Typography variant="body2" gutterBottom>
-                <h2>Descrição:</h2>
+                <p>Descrição:</p>
                 {data.description}
               </Typography>
               <Typography variant="body2" color="text.secondary">
-                <h2>Avaliação:{data.avaliation}</h2>
+                <span>Avaliação:{data.avaliation}</span>
               </Typography>
             </Grid>
             <Grid item>
