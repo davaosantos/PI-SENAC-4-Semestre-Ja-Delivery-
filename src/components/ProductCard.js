@@ -2,12 +2,14 @@ import React, { useState } from "react";
 import 'bootstrap/dist/css/bootstrap.min.css'
 import {Card, Button, CardImg} from 'react-bootstrap';
 import  '../styles/productSlider.css'
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import Detalhes from "../pages/detalhes/detalhes";
 import { MDBModal } from "mdb-react-ui-kit";
 
 
 const ProductCard = props => {
+    const location = useLocation();
+    const data = location.state?.data;
 
     const openModal = () =>{
         toggleShow();
@@ -18,7 +20,7 @@ const ProductCard = props => {
     const toggleShow = () => setBasicModal(!basicModal);
   
 
-    let{imgSrc, price, title, description} = props.data;
+    let{imgSrc, price, title, description, avaliation} = props.data;
 
     return (
         
@@ -31,7 +33,7 @@ const ProductCard = props => {
             <Card.Body className = "text-center cardContent">
                 <Card.Title className="display-6 cardPreco">{price}</Card.Title>
                 <Card.Title className="cardTitulo">{title}</Card.Title>
-                <Link to='/detalhes' params={{ imagem: imgSrc, titulo: title, preco:price , descricao:description }}>
+                <Link to="/detalhes" state={{props}} >
                     <Button className="w-100 rounded-0 variant='success' buttonCardDetail" onClick={() => openModal()} >Detalhes</Button>
                 </Link>
             </Card.Body>

@@ -75,7 +75,7 @@ const ProductSlider = () => {
                     const gsReference = ref(storage, 'gs://bucket/images/stars.jpg');
                     return(
                         <SwiperSlide>
-                                <ProductCard data={{description : product.descricao, imgSrc: product.avatar, price:'R$' + product.preco, title:product.nome}}/>
+                                <ProductCard data={{ avaliation: product.avaliacao, description : product.descricao, imgSrc: product.avatar, price:'R$' + product.preco, title:product.nome}}/>
                         </SwiperSlide>
                     );
                 })}

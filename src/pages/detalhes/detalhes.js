@@ -1,11 +1,12 @@
 import '../../styles/home.css'
-import { BrowserRouter, Routes, Route  , Link} from 'react-router-dom';
+import { BrowserRouter, Routes, Route  , Link, useParams, useLocation, UNSAFE_LocationContext} from 'react-router-dom';
 import logoJaDelivery  from "../../assets/pngtree-cartoon-delivery-staff_cb.png"
 import { logout } from './../../firebase';
 import facebook from "../../assets/facebook(1).png"
 import instagram from "../../assets/instagram(1).png"
 import twitter from "../../assets/twitter(1).png"
 import {Row, Col} from 'antd';
+
 
 
 import Header from './../../components/Header';
@@ -25,11 +26,21 @@ const Img = styled('img')({
 });
 
 const Detalhes = props =>{
-    console.log(props);
+  const location = useLocation();
+  console.log(props, "props");
+  console.log(location, "useLocationHook")
+  const data = location.state.props.data;
+
+  const {type} = useParams();
+  const stateParamVal = useLocation().state.stateParam;
+  console.log("PROPS PARAMETER VALUE - "+ type);
+  console.log("PROPS PARAMETER VALUE - "+ stateParamVal);
+    console.log("DATA" + data);
+    console.log("Description" + data.imgSrc)
     return(
         <>
   <Header/>
-
+  
   <section className='productDetailSection'>
   <Paper
       sx={{
@@ -44,31 +55,31 @@ const Detalhes = props =>{
       <Grid container spacing={2}>
         <Grid item>
           <ButtonBase sx={{ width: 300, height: 300 }}>
-            <Img alt="complex" src="/static/images/grid/complex.jpg" />
+            <Img alt="complex" src={data.imgSrc} />
           </ButtonBase>
         </Grid>
         <Grid item xs={12} sm >
           <Grid item xs container direction="column" spacing={2}>
             <Grid item xs>
               <Typography gutterBottom variant="subtitle1" component="div">
-                Standard license
+                {data.title}
               </Typography>
               <Typography variant="body2" gutterBottom>
-                Full resolution 1920x1080 • JPEG
+                <h2>Descrição:</h2>
+                {data.description}
               </Typography>
               <Typography variant="body2" color="text.secondary">
-                ID: 1030114
+                <h2>Avaliação:{data.avaliation}</h2>
               </Typography>
             </Grid>
             <Grid item>
               <Typography sx={{ cursor: 'pointer' }} variant="body2">
-                Remove
               </Typography>
             </Grid>
           </Grid>
           <Grid item>
             <Typography variant="subtitle1" component="div">
-              $19.00
+                {data.price}
             </Typography>
           </Grid>
         </Grid>
