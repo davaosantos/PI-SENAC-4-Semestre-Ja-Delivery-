@@ -19,19 +19,15 @@ import img7 from '../assets/imagens/pitu.webp'
 import { collection, getDocs } from "firebase/firestore";
 import { db, storage } from "../firebase";
 import { ref } from "firebase/storage";
-import { useLocation } from 'react-router-dom';
 
 
 
-const ProductSlider = props => {
+const ProductSliderVisit = () => {
     
     //constante de produtos
   const [products, setProducts] = useState([]);
   const productsCollectionRef = collection(db, "products");
   const [nome , setNome] = useState("");
-  const location = useLocation();
-
-  console.log(location);
 
   useEffect(() => {
     const getProducts = async () => {
@@ -79,7 +75,7 @@ const ProductSlider = props => {
                     const gsReference = ref(storage, 'gs://bucket/images/stars.jpg');
                     return(
                         <SwiperSlide>
-                                <ProductCard data={{ user_id: location.state.id, id:product.id, avaliation: product.avaliacao, qty: product.quantidade, description : product.descricao, imgSrc: product.avatar, price:product.preco, title:product.nome}}/>
+                                <ProductCard data={{ avaliation: product.avaliacao, description : product.descricao, imgSrc: product.avatar, price:product.preco, title:product.nome}}/>
                         </SwiperSlide>
                     );
                 })}
@@ -91,4 +87,4 @@ const ProductSlider = props => {
 }
 
 
-export default ProductSlider;
+export default ProductSliderVisit;

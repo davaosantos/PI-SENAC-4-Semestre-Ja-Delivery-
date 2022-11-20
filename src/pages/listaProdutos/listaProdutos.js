@@ -2,7 +2,7 @@ import { useState, useEffect, React } from "react";
 import HeaderUser from "./../../components/HeaderUser"; 
 
 import '../../styles/home.css'
-import { BrowserRouter, Routes, Route  , Link} from 'react-router-dom';
+import { BrowserRouter, Routes, Route  , Link, useLocation} from 'react-router-dom';
 import logoJaDelivery  from "../../assets/pngtree-cartoon-delivery-staff_cb.png"
 import { signOut } from "firebase/auth";
 import { Button } from 'react-bootstrap';
@@ -47,9 +47,16 @@ import { db } from "../../firebase";
 import Modal from "react-modal";
 import { productSchema } from './../../validations/ProductValidation';
 
-function ListaProdutos() {
+const ListaProdutos = (props) => {
 
     const navigate = useNavigate();
+    const location = useLocation();
+
+    console.log("LOCATION LISTA PRODUTOS -------")
+    console.log(location);
+    console.log("PROPS LISTA PRODUTOS -------")
+    console.log(props);
+
     const logoutUser = async () => {
         await auth.signOut();
         navigate('/')
@@ -66,7 +73,7 @@ function ListaProdutos() {
 
       const[modelId , setModelId] = useState("");
 
-  //Constantes do update
+    //Constantes do update
     const [newNome, setNewNome]= useState("");
     const [newAvaliacao, setNewAvaliacao]= useState("");
     const [newDescricao, setNewDescricao]= useState("");
@@ -75,14 +82,20 @@ function ListaProdutos() {
     const [newStatus, setNewStatus]= useState("");
 
     //CARREGA DADOS
-  const carregaDados = async (product) =>{
+  const carregaDados = async (product, tipo_usuario) =>{
     const docRef = doc(db, "products", product.id)
     const docSnap = await getDoc(docRef);
 
     docSnap.data();
 
-    toggleShow();
+    console.log(tipo_usuario + "TIPO DESSA PORRA")
 
+    if(tipo_usuario == "Estoquista"){
+      toggleShow2();
+    }else{
+      toggleShow();
+    }
+    
     let docId = JSON.stringify(docSnap.id);
     docId = JSON.parse(docId);
     
@@ -166,13 +179,19 @@ function ListaProdutos() {
     }
 
   const [basicModal, setBasicModal] = useState(false);
+  const [basicModal2, setBasicModal2] = useState(false);
 
   const toggleShow = () => setBasicModal(!basicModal);
+
+  const toggleShow2 = () => setBasicModal2(!basicModal2);
 
 
   //constante de produtos
   const [products, setProducts] = useState([]);
   const productsCollectionRef = collection(db, "products");
+
+  //Constante de usuarios
+  const usersCollectionRef = collection(db, "users");
 
   //Variavel para criar os indices na listagem
   var number = 0;
@@ -183,6 +202,8 @@ function ListaProdutos() {
     alert("Produto deletado");
   };
 
+
+  // Faz o load dos produtos
   useEffect(() => {
     const getProducts = async () => {
       const data = await getDocs(productsCollectionRef);
@@ -190,6 +211,16 @@ function ListaProdutos() {
     };
     getProducts();
   }, []);
+
+  // Faz o load dos usuarios
+  useEffect(() => {
+    const getUsers = async () => {
+      const data = await getDocs(productsCollectionRef);
+      setProducts(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+    };
+    getUsers();
+  }, []);
+  
 
   const [query, setQuery] = useState("");
 
@@ -214,7 +245,7 @@ return (
             </a>
             <ul className="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
               <div>
-                <Link to='/home'>
+                <Link state={{nome: location.state.nome, id: location.state.id, tipo_usuario : location.state.tipo_usuario}} to='/home'>
                 <img
                   src={logoJaDelivery}
                   alt=""
@@ -225,26 +256,26 @@ return (
               </div>
 
               <li>
-                <a href="#" className="nav-link px-2 text-white">
+                <Link state={{nome: location.state.nome, id: location.state.id, tipo_usuario : location.state.tipo_usuario}} to='/listaProdutos'>
                   Lista Produtos
-                </a>
+                </Link>
               </li>
               <li>
-                <Link to='/cadastroUsuario' href="#" className="nav-link px-2 text-white">
+                <Link state={{nome: location.state.nome, id: location.state.id, tipo_usuario : location.state.tipo_usuario}} to='/cadastroUsuario' href="#" className="nav-link px-2 text-white">
                   Cadastrar Usuário
                 </Link>
               </li>
     
               <li>
-              <Link to='/listaUsuarios' className="nav-link px-2 text-white">
+              <Link state={{nome: location.state.nome, id: location.state.id, tipo_usuario : location.state.tipo_usuario}} to='/listaUsuarios' className="nav-link px-2 text-white">
                   Lista Usuários
                 </Link>
               </li>
               <li>
-                  <a href="#" className="nav-link px-2 text-white">
-                    <img src={cart}></img>
-                  </a>
-              </li>
+                    <Link state={{nome: location.state.nome, id: location.state.id, tipo_usuario : location.state.tipo_usuario}}  to='/carrinho' className="nav-link px-2 text-white">
+                          <img src={cart}></img>
+                  </Link>
+             </li>
             </ul>
             <form className="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3" role="search">
               <input
@@ -279,7 +310,7 @@ return (
                 <th>Status</th>
                 <th>Ação</th>
                 <th><button className="btnAddProduct" >
-                <Link className="nav-link px-2 text-white" to='/cadastroProduto' >
+                <Link state={{ nome : location.state.nome , id : location.state.id, tipo_usuario : location.state.tipo_usuario }} className="nav-link px-2 text-white" to='/cadastroProduto' >
                   +
                 </Link></button></th>
               </tr>
@@ -300,7 +331,7 @@ return (
   
 
                     <td class="tableUserData">
-                      <Button className="buttonUpdateUser" onClick={() => carregaDados(product)}>
+                      <Button className="buttonUpdateUser" onClick={() => carregaDados(product, location.state.tipo_usuario)}>
                         <img
                           height="10px"
                           width="10px"
@@ -480,11 +511,212 @@ return (
                                 className="modalEditSaveBtn"
                                 onClick={() => {
                                   updateProducts(
-                                    product.id,
+                                    modelId,
                                     product.nome,
-									product.quantidade,
-									product.valor,
-									product.status
+                                    product.quantidade,
+                                    product.valor,
+                                    product.status
+                                  );
+                                }}
+                              >
+                                Save changes
+                              </MDBBtn>
+                            </MDBModalFooter>
+                          </MDBModalContent>
+                        </MDBModalDialog>
+                      </MDBModal> 
+
+
+
+
+
+
+
+
+                      
+
+                      <MDBModal
+                        show={basicModal2}
+                        setShow={setBasicModal2}
+                        tabIndex="-1"
+                      >
+                        <MDBModalDialog>
+                          <MDBModalContent className="modalUserUpdate">
+                            <MDBModalHeader>
+                              <MDBModalTitle>Modal title</MDBModalTitle>
+                              <MDBBtn
+                                className="btn-close"
+                                color="none"
+                                onClick={toggleShow2}
+                              ></MDBBtn>
+                            </MDBModalHeader>
+                            <MDBModalBody>
+                              <Form className="form-update-user">
+                              <FormGroup row>
+                                  <Label for="id" sm={2}>
+                                    ID
+                                  </Label>
+                                  <Col sm={10}>
+                                    <Input
+                                      type="text"
+                                      name="id"
+                                      id="id"
+                                      placeholder="id"
+                                      value={modelId}
+                                      disabled="true"
+                                    />
+                                  </Col>
+                                </FormGroup>
+
+                                <FormGroup row>
+                                  <Label for="nome" sm={2}>
+                                    Nome
+                                  </Label>
+                                  <Col sm={10}>
+                                    <Input
+                                      type="text"
+                                      name="nome"
+                                      id="nome"
+                                      placeholder="Nome"
+                                      disabled="true"
+                                      defaultValue={modelData.nome}
+                                      onChange={(event) => {
+                                        setNewNome(event.target.value);
+                                      }}
+                                    />
+                                  </Col>
+                                </FormGroup>
+
+                                <FormGroup row>
+                                  <Label for="avaliacao" sm={2}>
+                                    Avaliação
+                                  </Label>
+                                  <Col sm={10}>
+                                    <Input
+                                      type="select"
+                                      name="avaliacao"
+                                      id="avaliacao"
+                                      disabled="true"
+                                      defaultValue={modelData.avaliacao}
+                                      onChange={(event) => {
+                                        setNewAvaliacao(event.target.value);
+                                      }}
+                                    >  
+                                      <option></option>
+                                      <option>0</option>
+                                      <option>0.5</option>
+                                      <option>1.0</option>
+                                      <option>1.5</option>
+                                      <option>2.0</option>
+                                      <option>2.5</option>
+                                      <option>3.0</option>
+                                      <option>3.5</option>
+                                      <option>4.0</option>
+                                      <option>4.5</option>
+                                      <option>5.0</option>
+                                    </Input>
+                                  </Col>
+                                </FormGroup>
+
+                                <FormGroup>
+                                    <Label for="descricao">Descrição :</Label>
+                                    <Input 
+                                    type="textarea" 
+                                    placeholder="Descrição"
+                                    name="descricao" 
+                                    defaultValue={modelData.descricao}
+                                    id="descricao"      
+                                    disabled="true"                        
+                                    rows={4}
+                                    onChange={(event) => {
+                                      setNewDescricao(event.target.value);
+                                    }}/>
+                              </FormGroup>
+
+                                <FormGroup row>
+                                  <Label for="quantidade" sm={2}>
+                                    Qtd
+                                  </Label>
+                                  <Col sm={10}>
+                                    <Input
+                                      type="number"
+                                      name="quantidade"
+                                      id="quantidade"
+                                      placeholder="Quantidade"
+                                      defaultValue={modelData.quantidade}
+                                      onChange={(event) => {
+                                        setNewQuantidade(
+                                          event.target.value
+                                        );
+                                      }}
+                                    />
+                                  </Col>
+                                </FormGroup>
+								
+								<FormGroup row>
+                                  <Label for="valor" sm={2}>
+                                    Valor
+                                  </Label>
+                                  <Col sm={10}>
+                                    <Input
+                                      type="number"
+                                      name="preco"
+                                      id="preco"
+                                      disabled="true"
+                                      placeholder="Valor"
+                                      defaultValue={modelData.preco}
+                                      onChange={(event) => {
+                                        setNewPreco(
+                                          event.target.value
+                                        );
+                                      }}
+                                    />
+                                  </Col>
+                                </FormGroup>
+
+                                
+                                <FormGroup row>
+                                  <Label for="status" sm={2}>
+                                    Tipo
+                                  </Label>
+                                  <Col sm={10}>
+                                    <Input
+                                      type="status"
+                                      name="status"
+                                      id="status"
+                                      disabled="true"
+                                      defaultValue={modelData.status}
+                                      onChange={(event) => {
+                                        setNewStatus(event.target.value);
+                                      }}
+                                    >  
+                                      <option></option>
+                                      <option>Disponivel</option>
+                                      <option>Indisponivel</option>
+                                    </Input>
+                                  </Col>
+                                </FormGroup>
+
+                              </Form>
+                            </MDBModalBody>
+
+                            <MDBModalFooter>
+                              <MDBBtn
+                                className="modalEditCloseBtn"
+                                color="secondary"
+                                onClick={toggleShow2}
+                              >
+                                Close
+                              </MDBBtn>
+                              <MDBBtn
+                                className="modalEditSaveBtn"
+                                onClick={() => {
+                                  updateProducts(
+                                    modelId,
+                                    product.nome,
+                                    product.quantidade,
+                                    product.valor,
+                                    product.status
                                   );
                                 }}
                               >
@@ -494,6 +726,8 @@ return (
                           </MDBModalContent>
                         </MDBModalDialog>
                       </MDBModal>
+
+        
                       <Button
                         className="btnInativarUsuario"
                         height="10px"

@@ -1,5 +1,5 @@
 import '../../styles/home.css'
-import { BrowserRouter, Routes, Route  , Link} from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Link, useParams, useLocation, useNavigate } from 'react-router-dom';
 import logoJaDelivery  from "../../assets/pngtree-cartoon-delivery-staff_cb.png"
 import { logout } from './../../firebase';
 import facebook from "../../assets/facebook(1).png"
@@ -12,18 +12,29 @@ import Header from './../../components/Header';
 import { useState } from 'react';
 import { MDBModal } from 'mdb-react-ui-kit';
 
-export default function Home(){
+const Home = (props) =>{
+
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  console.log(location);
+  console.log(props);
+
   
     return(
         <>
-  <Header/>
+  <Header
+  
+      user={{ nome : location.state.nome , id : location.state.id, tipo_usuario : location.state.tipo_usuario }}
+  
+  />
 
   <section className='carroselProdutos'>
-      <h1>FAIXA DA LANDING</h1>
+      <h1 className='headerCarrosel'>Mais vendidos</h1>
   </section>
 
   <section className='carroselProdutos'>
-      <ProductSlider/>
+      <ProductSlider state={{props}}/>
   </section>
 
   <footer className="footer-principal">
@@ -57,3 +68,5 @@ export default function Home(){
 
     )
 }
+
+export default Home;

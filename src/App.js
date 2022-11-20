@@ -1,10 +1,11 @@
 import { signInWithEmailAndPassword } from "firebase/auth";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import logoJaDelivery  from "./assets/pngtree-cartoon-delivery-staff_cb.png"
-import { auth } from "./firebase";
+import { auth, db } from "./firebase";
 import { useNavigate } from 'react-router';
+import { collection, getDocs } from 'firebase/firestore';
 
 
 
@@ -17,9 +18,76 @@ function App() {
     const [newSenha, setNewSenha]= useState("");
     const [error, setError]= useState("");
 
+    const [users, setUsers] = useState([]);
+    const [clientes, setClientes] = useState([]);
+
+
+    const usersCollectionRef = collection(db, "users");
+    const clientesCollectionRef = collection(db, "clientes");
+
+    useEffect(() => {
+        const getUsers = async () => {
+          const data = await getDocs(usersCollectionRef);
+          console.log(data);
+          console.log("teste");
+          setUsers(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+        };
+        getUsers();
+      }, []);
+    
+      useEffect(() => {
+        const getClientes = async () => {
+          const data = await getDocs(clientesCollectionRef);
+          console.log(data);
+          console.log("teste");
+          setClientes(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+        };
+        getClientes();
+      }, []);
+
     const loginUser = async () => {
       await signInWithEmailAndPassword(auth, newEmail, newSenha)
-      .then((auth) => {navigate('/home')} )
+      .then((auth) => {        
+
+        let tipoUsuario = "";
+
+            //Itera o banco para verificar se o email já existe
+          for(const user of users){
+            if(user.email == newEmail){
+              tipoUsuario = "usuario"
+              let userName = user.nome;
+              let userId = user.id;
+              let userType = user.tipo_usuario;
+
+              console.log(userName);
+
+              navigate('/home', {
+                state: {
+                  nome : userName,
+                  id : userId,
+                  tipo_usuario : userType
+                }
+              })
+            }
+          };
+
+          for(const cliente of clientes){
+            if(cliente.email == newEmail ){
+              tipoUsuario = "cliente"
+              let clienteName = cliente.nome;
+              let clienteId = cliente.id;
+              let clienteType = cliente.tipo_usuario;
+
+              navigate('/homeCliente', {nome: clienteName})
+            }
+          };
+
+          console.log(tipoUsuario);
+
+          
+
+        
+      } )
       .catch((err) => setError(err.message))
     }
 
@@ -47,7 +115,7 @@ function App() {
   </form>
   <div className="text-center fs-6">
     
-   <a href="#">Forget password?</a> or <a href="#">Sign up</a>
+   <a href="#">Forget password?</a> or <Link to='/cadastroCliente'>Sign up</Link>
   </div>
 </div>
 

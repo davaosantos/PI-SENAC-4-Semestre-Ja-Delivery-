@@ -5,6 +5,7 @@ import {
   Route,
   Link,
   useNavigate,
+  useLocation,
 } from "react-router-dom";
 import {
   Label,
@@ -35,7 +36,8 @@ import { nomeProductSchema, productSchema, descricaoProductSchema } from './../.
 import { Progress } from 'reactstrap';
 import CurrencyInput from 'react-currency-input-field';
 
-export default function CadastroProduto() {
+
+const CadastroProduto = (props) => {
 
   //Constantes url imagem
   const[fileUrl, setFileUrl] = useState(null);
@@ -43,10 +45,17 @@ export default function CadastroProduto() {
   //Array de produtos
   const [products, setProducts] = useState([]);
 
+  //Array de usuarios
+  const [users, setUsers] = useState([]);
+
   //Constantes de erro
   const [errorDescricao, setErrorDesc] = useState("");
   const [errorNome, setErrorNome] = useState("");
   const [errorNulo, setErrorNulo] = useState("");
+
+  const navigate = useNavigate();
+  const location = useLocation();
+
 
   //Faz o get dos produtos já cadastrados
   useEffect(() => {
@@ -66,6 +75,7 @@ export default function CadastroProduto() {
   const [newStatus, setNewStatus] = useState("");
 
   const [imgUrl, setImgUrl] = useState("");
+  const [imgUrl2, setImgUrl2] = useState("");
   const [progress, setProgress] = useState(0);
 
   const handleUpload = async (event) => {
@@ -93,7 +103,14 @@ export default function CadastroProduto() {
       },
       () => {
         getDownloadURL(uploadTask.snapshot.ref).then((url) => {
-          setImgUrl(url);
+          if(imgUrl != ""){
+            console.log("IMG 2")
+            setImgUrl2(url);
+          }else{
+            console.log("IMG 1")
+            setImgUrl(url);
+          }
+          
           console.log(imgUrl);
         });
       }
@@ -102,6 +119,7 @@ export default function CadastroProduto() {
 
   //Cria uma referencia para o banco
   const productsCollectionRef = collection(db, "products");
+
 
   //Cria os usuarios
   const createProducts = async () => {
@@ -162,7 +180,7 @@ export default function CadastroProduto() {
 
   return (
     <>
-      <Header />
+      <Header user={{ nome : location.state.nome , id : location.state.id, tipo_usuario : location.state.tipo_usuario }} />
 
       <section className="FormUsuario">
         <Form onSubmit={handleUpload}>
@@ -296,10 +314,12 @@ export default function CadastroProduto() {
               <Input  className="InputImagens" type="file" name="file" id="imgProduto"></Input>
               <Button type="submit">Anexar</Button>
               {!imgUrl && <Progress className="barraProgresso" value={progress} />}
+              
                
             </FormGroup>
     
             {imgUrl && <img src={imgUrl} className='imgCarregada' alt="imagem" height={100} />}
+            {imgUrl2 && <img src={imgUrl2} className='imgCarregada' alt="imagem" height={100} />}
           </Row>
 
           
@@ -339,3 +359,5 @@ export default function CadastroProduto() {
     </>
   );
 }
+
+export default CadastroProduto;

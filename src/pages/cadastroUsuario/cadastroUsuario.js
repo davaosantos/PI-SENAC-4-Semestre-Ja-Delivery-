@@ -1,5 +1,5 @@
 import '../../styles/home.css'
-import { BrowserRouter, Routes, Route, Link, useNavigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Link, useNavigate, useLocation } from 'react-router-dom';
 import { Label, Form, FormGroup, Input , FormText, Button, Col, Row} from 'reactstrap';
 import logoJaDelivery  from "../../assets/pngtree-cartoon-delivery-staff_cb.png"
 import facebook from "../../assets/facebook(1).png"
@@ -12,24 +12,51 @@ import { signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'fire
 import Header from '../../components/Header';
 import Select from 'react-select'
 import validaCpf from '../../validations/CpfValidation';
+import bcrypt from 'bcryptjs';
 
 import { userSchema, cpfSchema } from '../../validations/UserValidation';
+import PasswordEncrypt from './../../validations/PasswordEncrypt';
+import { useForm } from 'antd/es/form/Form';
 
 
 
-export default function CadastroUsuario(){
+const CadastroUsuario = (props) => {
+
+  const navigate = useNavigate();
+  const location = useLocation();
+  console.log("PROPS CADASTRO USUARIO-----")
+  console.log(props);
+  console.log("LOCATION CADASTRO USUARIO-----")
+  console.log(location);
 
     //Array de usuarios
     const [users, setUsers] = useState([]);
 
+    //Array de clientes
+    const [clientes, setClientes] = useState([]);
+
     //Faz o get dos usuários já cadastrados
     useEffect(() => {
       const getUsers = async () => {
-        const data = await getDocs(usersCollectionRef);
-        setUsers(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+        const dataU = await getDocs(usersCollectionRef);
+        setUsers(dataU.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+        console.log(dataU);
       };
       getUsers();
+      
     }, []);
+
+
+    //Faz o get dos clientes já cadastrados
+    useEffect(() => {
+      const getClientes = async () => {
+        const dataC = await getDocs(clientesCollectionRef);
+        setClientes(dataC.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+        console.log(dataC);
+      };
+      getClientes();
+    }, []);
+
 
 
     //Valores dos inputs
@@ -51,6 +78,8 @@ export default function CadastroUsuario(){
 
     //Cria uma referencia para o banco
     const usersCollectionRef = collection(db, "users");
+    //Cria uma referencia para o banco
+    const clientesCollectionRef = collection(db, "clientes");
 
     //Cria os usuarios
     const createUser = async () =>{
@@ -80,6 +109,13 @@ export default function CadastroUsuario(){
         }
       };
 
+      for(const cliente of clientes){
+        if(cliente.email == newEmail){
+          emailValid = false;
+          setErrorEmail("Email já cadastrado")
+        }
+      };
+
       //Verifica se o formulário é valido
       const isValid = await userSchema.isValid(formData);
 
@@ -95,9 +131,17 @@ export default function CadastroUsuario(){
 
       //Se o formulario e o email forem validos
       if(isValid && emailValid && cpfValido == true){
+
+        //Senha encriptografada
+        const hashedPassword = bcrypt.hashSync(newSenha, 10);
+
+        console.log(hashedPassword);
+
         await addDoc(usersCollectionRef, {nome: newNome, telefone: newTelefone, 
           email:newEmail, data_nascimento:newDataNascimento, tipo_usuario:newTipoUsuario,cpf:newCpf, 
-           senha: newSenha})
+           senha: hashedPassword})
+
+           
   
            const signIn = () =>{
             createUserWithEmailAndPassword(auth, newEmail, newSenha)
@@ -117,7 +161,8 @@ export default function CadastroUsuario(){
     return(
         <>
     
-    <Header/>
+    <Header user={{nome: location.state.nome, id: location.state.id, tipo_usuario : location.state.tipo_usuario}}
+      />
 
     <section className='FormUsuario'>
     <Form>
@@ -276,3 +321,5 @@ export default function CadastroUsuario(){
 
     )
 }
+
+export default CadastroUsuario;

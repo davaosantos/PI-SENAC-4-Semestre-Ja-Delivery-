@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { useState } from 'react';
 
-export default function HeaderUser(){
+ const HeaderUser = (props) => {
 
     const [query, setQuery] = useState("");
     const search = (data) => {
@@ -72,9 +72,9 @@ export default function HeaderUser(){
             </a>
           </li>
           <li>
-          <Link to='/listaUsuarios' className="nav-link px-2 text-white">
+          <Link to='/listaUsuarios' state={{props}} className="nav-link px-2 text-white">
               Lista Usuários
-            </Link>
+          </Link>
           </li>
         </ul>
         <form className="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3" role="search">
@@ -99,3 +99,5 @@ export default function HeaderUser(){
 
     )
 }
+
+export default HeaderUser;

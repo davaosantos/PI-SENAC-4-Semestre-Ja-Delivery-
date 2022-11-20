@@ -17,6 +17,7 @@ import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
 import ButtonBase from '@mui/material/ButtonBase';
+import HeaderCliente from '../../components/HeaderCliente';
 
 const Img = styled('img')({
   margin: 'auto',
@@ -33,13 +34,10 @@ const Detalhes = props =>{
 
   const {type} = useParams();
   const stateParamVal = useLocation().state.stateParam;
-  console.log("PROPS PARAMETER VALUE - "+ type);
-  console.log("PROPS PARAMETER VALUE - "+ stateParamVal);
-    console.log("DATA" + data);
-    console.log("Description" + data.imgSrc)
+  
     return(
         <>
-  <Header/>
+  <HeaderCliente/>
   
   <section className='productDetailSection'>
   <Paper

@@ -2,7 +2,7 @@ import { useState, useEffect, React } from "react";
 import HeaderUser from "./../../components/HeaderUser"; 
 
 import '../../styles/home.css'
-import { BrowserRouter, Routes, Route  , Link} from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Link, useLocation } from 'react-router-dom';
 import logoJaDelivery  from "../../assets/pngtree-cartoon-delivery-staff_cb.png"
 import { signOut } from "firebase/auth";
 import { Button } from 'react-bootstrap';
@@ -48,13 +48,16 @@ import Modal from "react-modal";
 import { updateSchema } from "../../validations/UserValidation";
 import { userSchema, modalSchema } from './../../validations/UserValidation';
 
-function ListaUsuarios() {
+const ListaUsuarios = (props) => {
 
     const navigate = useNavigate();
+    const location = useLocation();
     const logoutUser = async () => {
         await auth.signOut();
         navigate('/')
       }
+
+      console.log(location)
 
 
     const [modelData, setModelData] = useState({
@@ -241,7 +244,7 @@ function ListaUsuarios() {
             </a>
             <ul className="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
               <div>
-                <Link to='/home'>
+                <Link state={{nome: location.state.nome, id: location.state.id, tipo_usuario : location.state.tipo_usuario}} to='/home'>
                 <img
                   src={logoJaDelivery}
                   alt=""
@@ -252,27 +255,28 @@ function ListaUsuarios() {
               </div>
               
               <li>
-              <Link to='/listaProdutos' href="#" className="nav-link px-2 text-white">
+              <Link state={{nome: location.state.nome, id: location.state.id, tipo_usuario : location.state.tipo_usuario}} to='/listaProdutos'  className="nav-link px-2 text-white">
                   Lista Produtos
             </Link>
               </li>
               <li>
-                <Link to='/cadastroUsuario' href="#" className="nav-link px-2 text-white">
+                <Link state={{nome: location.state.nome, id: location.state.id, tipo_usuario : location.state.tipo_usuario}}  to='/cadastroUsuario' href="#" className="nav-link px-2 text-white">
                   Cadastrar Usuário
                 </Link>
               </li>
 
               <li>
-              <Link to='/listaUsuarios' className="nav-link px-2 text-white">
+              <Link state={{nome: location.state.nome, id: location.state.id, tipo_usuario : location.state.tipo_usuario}} to='/listaUsuarios' className="nav-link px-2 text-white">
                   Lista Usuários
                 </Link>
               </li>
 
               <li>
-                <a href="#" className="nav-link px-2 text-white">
-                  <img src={cart}></img>
-                </a>
-               </li>
+                    <Link state={{nome: location.state.nome, id: location.state.id, tipo_usuario : location.state.tipo_usuario}}  to='/carrinho' className="nav-link px-2 text-white">
+                <img src={cart}></img>
+                  </Link>
+          </li>
+
             </ul>
             <form className="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3" role="search">
               <input

@@ -1,5 +1,5 @@
 import '../styles/home.css'
-import { BrowserRouter, Routes, Route  , Link} from 'react-router-dom';
+import { BrowserRouter, Routes, Route  , Link, useLocation} from 'react-router-dom';
 import logoJaDelivery  from "../assets/pngtree-cartoon-delivery-staff_cb.png"
 import { signOut } from "firebase/auth";
 import { Button } from 'react-bootstrap';
@@ -7,8 +7,16 @@ import { auth } from '../firebase';
 import { useNavigate } from 'react-router-dom';
 import cart from "../assets/imagens/cart-69-24.png";
 
-export default function Header(){
+const Header = (props) => {
     const navigate = useNavigate();
+    const location = useLocation();
+
+
+    console.log("HEADER -----------")
+    console.log(location);
+    console.log("PROPS -----------")
+    console.log(props);
+
     const logoutUser = async () => {
         await auth.signOut();
         navigate('/')
@@ -37,35 +45,37 @@ export default function Header(){
           <div>
             <Link to='/home'>
             <img
+            state={{nome: props.user.nome, id: props.user.id, tipo_usuario : props.user.tipo_usuario}}
               src={logoJaDelivery}
               alt=""
               className="logoJaDelivery"
               height="45px"
+              
             />
             </Link>
           </div>
        
           <li>
-          <Link to='/listaProdutos' href="#" className="nav-link px-2 text-white">
+          <Link state={{nome: props.user.nome, id: props.user.id, tipo_usuario : props.user.tipo_usuario}}  to='/listaProdutos' href="#" className="nav-link px-2 text-white">
                   Lista Produtos
             </Link>
           </li>
           <li>
-            <Link to='/cadastroUsuario' href="#" className="nav-link px-2 text-white">
+            <Link state={{nome: location.state.nome, id: location.state.id, tipo_usuario : location.state.tipo_usuario}} to='/cadastroUsuario' href="#" className="nav-link px-2 text-white">
               Cadastrar Usuário
             </Link>
           </li>
           
           <li>
-          <Link to='/listaUsuarios' className="nav-link px-2 text-white">
+          <Link state={{nome: location.state.nome, id: location.state.id, tipo_usuario : location.state.tipo_usuario}} to='/listaUsuarios' className="nav-link px-2 text-white">
               Lista Usuários
             </Link>
           </li>
 
           <li>
-            <a href="#" className="nav-link px-2 text-white">
-              <img src={cart}></img>
-            </a>
+          <Link state={{nome: location.state.nome, id: location.state.id, tipo_usuario : location.state.tipo_usuario}}  to='/carrinho' className="nav-link px-2 text-white">
+          <img src={cart}></img>
+            </Link>
           </li>
         </ul>
         <form className="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3" role="search">
@@ -88,3 +98,5 @@ export default function Header(){
 
     )
 }
+
+export default Header;

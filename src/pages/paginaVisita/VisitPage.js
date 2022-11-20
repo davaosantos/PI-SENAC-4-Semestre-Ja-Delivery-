@@ -18,6 +18,7 @@ import HeaderVisit from '../../components/HeaderVisit';
 import { useState } from 'react';
 import { MDBModal } from 'mdb-react-ui-kit';
 import { Button } from 'reactstrap';
+import ProductSliderVisit from '../../components/ProductSliderVisit';
 
 export default function VisitPage(){
 
@@ -60,26 +61,7 @@ export default function VisitPage(){
   <div class="row text-center text-lg-start">
 
   
-    <div class="col-lg-3 col-md-4 col-6">
-      <Link to='/login' href="#" class="d-block mb-4 h-100">
-        <img class="img-fluid img-thumbnail" src={Brahma} height='900px' alt=""/>
-      </Link>
-    </div>
-    <div class="col-lg-3 col-md-4 col-6">
-      <Link to='/login' href="#" class="d-block mb-4 h-100">
-        <img class="img-fluid img-thumbnail" src={Budweiser} alt=""/>
-      </Link>
-    </div>
-    <div class="col-lg-3 col-md-4 col-6">
-      <Link to='/login' href="#" class="d-block mb-4 h-100">
-        <img class="img-fluid img-thumbnail" src={Beats} alt=""/>
-      </Link>
-    </div>
-    <div class="col-lg-3 col-md-4 col-6">
-      <Link to='/login' href="#" class="d-block mb-4 h-100">
-        <img class="img-fluid img-thumbnail" src={Absolut} alt=""/>
-      </Link>
-    </div>
+    <ProductSliderVisit></ProductSliderVisit>
    
   </div>
 
