@@ -112,6 +112,12 @@ const ListaPedidos = () => {
           </li>
 
           <li>
+          <Link to='/resumoPedido' className="nav-link px-2 text-white">
+              Pedidos
+            </Link>
+          </li>
+
+          <li>
           <Link  to='/carrinho' className="nav-link px-2 text-white">
           <img ></img>
             </Link>
@@ -146,7 +152,6 @@ const ListaPedidos = () => {
                 <th>Data do pedido</th>
                 <th>Cod Pedido</th>
                 <th>Valor</th>
-                <th>Status</th>
               </tr>
             </thead>
 
@@ -157,10 +162,9 @@ const ListaPedidos = () => {
                 <tbody>
                   <tr>
                     <th scope="row">{number += 1}</th>
-                    <td>{pedido.data}</td>
+                    <td>{pedido.dataPedido}</td>
                     <td>{pedido.nrPedido}</td>
                     <td>{pedido.valorTotal}</td>
-                    <td>{pedido.status}</td>  
                   </tr>
                 </tbody>
               );

@@ -68,6 +68,11 @@ const ResumoPedido = props =>{
   const [newDataNascimento, setNewDataNascimento]= useState("");
   const [newQtdParcela, setNewQtdParcela]= useState("");
 
+  const current = new Date();
+  const currentDate = `${current.getDate()}/${current.getMonth()+1}/${current.getFullYear()}`;
+
+  let numeroPedido = Math.floor(Math.random() * 65536);
+
   //Cria uma referencia para o banco
   const pedidosCollectionRef = collection(db, "pedidos");
 
@@ -80,10 +85,12 @@ const ResumoPedido = props =>{
       nomeTitular: location.state.nomeTitular,
       nrCartao: location.state.nrCartao,
       produtos: location.state.produtos,
-      valorTotal: location.state.valorTotal
+      valorTotal: location.state.valorTotal,
+      nrPedido: numeroPedido,
+      dataPedido : currentDate
     });
     //signIn();
-    alert("Produto cadastrado com sucesso");
+    alert("Pedido realizado");
     
     
   };
@@ -139,7 +146,7 @@ const ResumoPedido = props =>{
           </li>
 
           <li>
-          <Link  to='/resumoPedido' className="nav-link px-2 text-white">
+          <Link  to='/listaPedidos' className="nav-link px-2 text-white">
               Pedidos
             </Link>
           </li>
@@ -181,11 +188,11 @@ const ResumoPedido = props =>{
                   <MDBRow>
                     <MDBCol className="mb-3">
                       <p className="small text-muted mb-1">Date</p>
-                      <p>10 April 2021</p>
+                      <p>{currentDate}</p>
                     </MDBCol>
                     <MDBCol className="mb-3">
                       <p className="small text-muted mb-1">Order No.</p>
-                      <p>012j1gvs356c</p>
+                      <p>{numeroPedido}</p>
                     </MDBCol>
                   </MDBRow>
 
@@ -205,21 +212,20 @@ const ResumoPedido = props =>{
                     style={{ backgroundColor: "#f2f2f2" }}
                   >
                     <MDBRow>
-                      <MDBCol md="8" lg="9">
-                        <p>BEATS Solo 3 Wireless Headphones</p>
-                      </MDBCol>
-                      <MDBCol md="4" lg="3">
-                        <p>{location.state.valorTotal}</p>
-                      </MDBCol>
+
+                      {location.state.produtos
+                        .map((product) => {
+                          return (
+
+                            <p>{product.nome}, R${product.price}</p>
+
+                          );
+                        })}
+
+
+
                     </MDBRow>
-                    <MDBRow>
-                      <MDBCol md="8" lg="9">
-                        <p className="mb-0">Shipping</p>
-                      </MDBCol>
-                      <MDBCol md="4" lg="3">
-                        <p className="mb-0">£33.00</p>
-                      </MDBCol>
-                    </MDBRow>
+
                   </div>
                   <MDBRow className="my-4">
                     <MDBCol md="4" className="offset-md-8 col-lg-3 offset-lg-9">
@@ -227,7 +233,7 @@ const ResumoPedido = props =>{
                         className="lead fw-bold mb-0"
                         style={{ color: "#f37a27" }}
                       >
-                        R${location.state.valorTotal}
+                        Total : R${location.state.valorTotal}
                       </p>
                     </MDBCol>
                   </MDBRow>

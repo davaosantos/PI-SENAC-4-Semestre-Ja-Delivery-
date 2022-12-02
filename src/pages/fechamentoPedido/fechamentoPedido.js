@@ -55,7 +55,6 @@ const FechamentoPedido = props =>{
   //Cria uma referencia para o banco
   const pedidosCollectionRef = collection(db, "pedidos");
 
-
   //Cria o pedido
   const createPedido = async () => {
 
@@ -66,8 +65,7 @@ const FechamentoPedido = props =>{
     });
     //signIn();
     alert("Produto cadastrado com sucesso");
-    
-    
+  
   };
 
   

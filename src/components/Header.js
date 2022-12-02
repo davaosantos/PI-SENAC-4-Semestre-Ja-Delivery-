@@ -73,7 +73,7 @@ const Header = (props) => {
           </li>
 
           <li>
-          <Link to='/resumoPedido' className="nav-link px-2 text-white">
+          <Link to='/listaPedidos' className="nav-link px-2 text-white">
               Pedidos
             </Link>
           </li>
