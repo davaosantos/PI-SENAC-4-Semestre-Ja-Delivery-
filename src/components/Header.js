@@ -73,10 +73,18 @@ const Header = (props) => {
           </li>
 
           <li>
+          <Link to='/resumoPedido' className="nav-link px-2 text-white">
+              Pedidos
+            </Link>
+          </li>
+
+          <li>
           <Link state={{nome: location.state.nome, id: location.state.id, tipo_usuario : location.state.tipo_usuario}}  to='/carrinho' className="nav-link px-2 text-white">
           <img src={cart}></img>
             </Link>
           </li>
+
+          
         </ul>
         <form className="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3" role="search">
           <input

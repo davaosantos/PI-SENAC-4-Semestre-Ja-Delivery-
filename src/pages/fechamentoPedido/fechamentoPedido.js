@@ -1,7 +1,7 @@
 import '../../styles/home.css'
-import { BrowserRouter, Routes, Route  , Link, useParams, useLocation, UNSAFE_LocationContext} from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Link, useParams, useLocation, UNSAFE_LocationContext, useNavigate } from 'react-router-dom';
 import logoJaDelivery  from "../../assets/pngtree-cartoon-delivery-staff_cb.png"
-import { logout } from './../../firebase';
+import { db, logout } from './../../firebase';
 import facebook from "../../assets/facebook(1).png"
 import instagram from "../../assets/instagram(1).png"
 import twitter from "../../assets/twitter(1).png"
@@ -23,6 +23,8 @@ import { Form } from 'reactstrap';
 import { FormGroup } from 'reactstrap';
 import { Label, Button } from 'reactstrap';
 import { Input } from 'reactstrap';
+import { addDoc, collection } from 'firebase/firestore';
+import { useState } from 'react';
 
 const Img = styled('img')({
   margin: 'auto',
@@ -33,10 +35,41 @@ const Img = styled('img')({
 
 const FechamentoPedido = props =>{
   const location = useLocation();
+  const navigate = useNavigate();
 
+  console.log(props + "PROPS PEDIDO")
+  console.log(location.state);
 
   const {type} = useParams();
   const stateParamVal = useLocation().state.stateParam;
+
+  //Array de usuarios
+  const [pedido, setPedido] = React.useState([]);
+  //Valores dos inputs
+  const [newNrCartao, setNewNrCartao]= useState("");
+  const [newCodVerificador, setNewCodVerificador]= useState(0);
+  const [newNmTitular, setNewNmTitular]= useState("");
+  const [newDataNascimento, setNewDataNascimento]= useState("");
+  const [newQtdParcela, setNewQtdParcela]= useState("");
+
+  //Cria uma referencia para o banco
+  const pedidosCollectionRef = collection(db, "pedidos");
+
+
+  //Cria o pedido
+  const createPedido = async () => {
+
+      //Se o formulario e o email forem validos
+    await addDoc(pedidosCollectionRef, {
+      produtos: location.state.produtos,
+      total: location.state.valorTotal
+    });
+    //signIn();
+    alert("Produto cadastrado com sucesso");
+    
+    
+  };
+
   
     return(
         <>
@@ -56,6 +89,9 @@ const FechamentoPedido = props =>{
                   name="numCartao"
                   placeholder="Numero do cartão"
                   type="number"
+                  onChange={(event) => {
+                    setNewNrCartao(event.target.value);
+                  }}
            
                 />
               </FormGroup>
@@ -69,6 +105,9 @@ const FechamentoPedido = props =>{
                   name="codVerificador"
                   placeholder="Codigo verificador"
                   type="number"
+                  onChange={(event) => {
+                    setNewCodVerificador(event.target.value);
+                  }}
            
                 />
               </FormGroup>
@@ -82,6 +121,9 @@ const FechamentoPedido = props =>{
                   name="nomeTitular"
                   placeholder="Nome do titular"
                   type="text"
+                  onChange={(event) => {
+                    setNewNmTitular(event.target.value);
+                  }}
            
                 />
               </FormGroup>
@@ -97,6 +139,9 @@ const FechamentoPedido = props =>{
                 name="data_nascimento"
                 placeholder="Data nascimento"
                 type="date"
+                onChange={(event) => {
+                  setNewDataNascimento(event.target.value);
+                }}
                 />
             </FormGroup>
             </Col>
@@ -109,6 +154,9 @@ const FechamentoPedido = props =>{
                   name="parcelas"
                   placeholder="Quantidade de parcelas"
                   type="select"
+                  onChange={(event) => {
+                    setNewQtdParcela(event.target.value);
+                  }}
 
                 >
                   <option></option>
@@ -136,12 +184,10 @@ const FechamentoPedido = props =>{
                     </ul>
                 </Tab>
             </Tabs>
-
+          <Link to="/resumoPedido"  state={{nrCartao: newNrCartao, nomeTitular: newNmTitular, valorTotal:location.state.total , produtos:location.state.produtos}}>
             <Button className="btnCadastrarProdutoFinal" >Fechar Pedido</Button>
+            </Link>
            </section>
-
-        
-
 
   <footer className="footer-principal">
     <div className="container">

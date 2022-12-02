@@ -19,6 +19,9 @@ import HomeCliente from './pages/homeCliente/homeCliente';
 import UpdateCliente from './pages/updateCliente/updateCliente';
 import Carrinho from './pages/carrinho/carrinho';
 import FechamentoPedido from './pages/fechamentoPedido/fechamentoPedido';
+import ListaPedidos from './pages/listaPedidos/ListaPedidos';
+import ResumoPedido from './pages/resumoPedido/resumoPedido';
+
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -41,6 +44,8 @@ root.render(
         <Route path='/homeCliente' element={<HomeCliente/>}></Route>
         <Route path='/updateCliente' element={<UpdateCliente/>}></Route>
         <Route path='/fechamentoPedido' element={<FechamentoPedido/>}></Route>
+        <Route path='/listaPedidos' element={<ListaPedidos/>}></Route>
+        <Route path='/resumoPedido' element={<ResumoPedido/>}></Route>
       </Routes>
       
     </BrowserRouter>

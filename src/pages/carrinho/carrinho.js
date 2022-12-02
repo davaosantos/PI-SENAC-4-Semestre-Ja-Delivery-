@@ -101,6 +101,7 @@ const Carrinho = (props) => {
   //constante de produtos
   const [products, setProducts] = useState([]);
   const productsCollectionRef = collection(db, "products");
+  const [counter, setCounter] = useState(0);  
 
   //Constante de usuarios
   const cartCollectionRef = collection(db, "cart");
@@ -116,21 +117,35 @@ const Carrinho = (props) => {
   };
 
 
+  const incrementCount = () => {  
+    // Update state with incremented value  
+    setCounter(counter + 1);  
+  };  
+  const decrementCount = () => {  
+    // Update state with incremented value  
+    setCounter((c) => Math.max(c - 1, 0));  
+  }; 
+
+
   // Faz o load dos pedidos
   useEffect(() => {
     const getCart = async () => {
       
-      const cartQuery = query(cartCollectionRef, where("user_id", "==", location.state.id));
+      const cartQuery = query(cartCollectionRef, where("user_id", "==", location.state.id , " AND "));
       console.log(location.state.id + "STATE");
-      console.log(cartQuery);
+      console.log(cartQuery + "cartQuery");
 
       const data = await getDocs(cartQuery);
-      setProducts(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+      setProducts(data.docs.map((doc) => (
+        { ...doc.data(), id: doc.id }
+        )));
       getTotalPrice(products);
       
     };
     getCart();
   }, []);
+
+  console.log(products);
   
 
   const [queri, setQueri] = useState("");
@@ -168,13 +183,7 @@ return (
                 <th>Cod. Produto</th>
                 <th>Nome</th>
                 <th>Quantidade</th>
-                <th>Valor</th>
-                <th>Status</th>
                 <th>Ação</th>
-                <th><button className="btnAddProduct" >
-                <Link className="nav-link px-2 text-white" to='/cadastroProduto' >
-                  +
-                </Link></button></th>
               </tr>
             </thead>
 
@@ -186,12 +195,13 @@ return (
                   <tr>
                     <th scope="row">{product.id}</th>
                     <td>{product.nome}</td>
-                    <td>{product.quantidade}</td>
-                    <td>{product.preco}</td>
-                    <td>{product.status}</td>
+                    <td>
+                    <div className="btn-group" width="50px" role="group"> <button type="button" className="btn btn-warning" onClick={decrementCount} > - -</button>  
+                          <input type="number" min="1" defaultValue={counter} className="form-controlA" />  
+                          <Button  type="button"  className="btn btn-warning"  onClick={incrementCount} > + </Button> 
+                      </div>
+                    </td>
                     
-  
-
                     <td class="tableUserData">
                       <Button className="buttonUpdateUser" onClick={() => carregaDados(product, location.state.tipo_usuario)}>
                         <img
@@ -200,7 +210,6 @@ return (
                           src={updateButton}
                         ></img>
                       </Button>
-                    
         
                       <Button
                         className="btnInativarUsuario"
@@ -213,7 +222,6 @@ return (
                         x
                       </Button>
                     </td>
-                    <td></td>
                   </tr>
                 </tbody>
               );
@@ -235,7 +243,7 @@ return (
                 
               </tr>
               <button className="btnFecharPedido" >
-                <Link state={{total:totalPrice}} to='/fechamentoPedido' className="nav-link px-2 " >
+                <Link state={{total:totalPrice , produtos:products}} to='/fechamentoPedido' className="nav-link px-2 " >
                   Finalizar compra
                 </Link></button>      
             </thead>
