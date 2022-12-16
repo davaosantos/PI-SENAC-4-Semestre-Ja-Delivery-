@@ -182,7 +182,7 @@ const FechamentoPedido = props =>{
                     </ul>
                 </Tab>
             </Tabs>
-          <Link to="/resumoPedido"  state={{nrCartao: newNrCartao, nomeTitular: newNmTitular, valorTotal:location.state.total , produtos:location.state.produtos}}>
+          <Link to="/resumoPedido"  state={{nrCartao: newNrCartao, nomeTitular: newNmTitular, valorTotal:location.state.total , produtos:location.state.produtos, endereco:location.state.endereco}}>
             <Button className="btnCadastrarProdutoFinal" >Fechar Pedido</Button>
             </Link>
            </section>

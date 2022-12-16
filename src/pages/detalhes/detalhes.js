@@ -77,7 +77,7 @@ const Detalhes = props =>{
           </Grid>
           <Grid item>
             <Typography variant="subtitle1" component="div">
-                {data.price}
+                <span>Preço: R${data.price}</span>
             </Typography>
           </Grid>
         </Grid>

@@ -243,7 +243,7 @@ return (
                 
               </tr>
               <button className="btnFecharPedido" >
-                <Link state={{total:totalPrice , produtos:products}} to='/fechamentoPedido' className="nav-link px-2 " >
+                <Link state={{total:totalPrice , produtos:products, endereco:location.state.endereco}} to='/fechamentoPedido' className="nav-link px-2 " >
                   Finalizar compra
                 </Link></button>      
             </thead>

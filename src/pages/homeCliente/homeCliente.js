@@ -1,5 +1,5 @@
 import '../../styles/home.css'
-import { BrowserRouter, Routes, Route  , Link} from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Link, useLocation, useNavigate } from 'react-router-dom';
 import logoJaDelivery  from "../../assets/pngtree-cartoon-delivery-staff_cb.png"
 import { logout } from './../../firebase';
 import facebook from "../../assets/facebook(1).png"
@@ -14,17 +14,21 @@ import { MDBModal } from 'mdb-react-ui-kit';
 import HeaderCliente from './../../components/HeaderCliente';
 
 const HomeCliente = (props) => {
+
+  const location = useLocation();
+  const navigate = useNavigate();
+
   
     return(
         <>
-  <HeaderCliente/>
+  <HeaderCliente user={{ nome : location.state.nome , id : location.state.id, tipo_usuario : location.state.tipo_usuario, endereco : location.state.endereco }}/>
 
   <section className='carroselProdutos'>
       <h1 className='headerCarrosel'>Mais vendidos</h1>
   </section>
 
   <section className='carroselProdutos'>
-      <ProductSlider/>
+      <ProductSlider state={{props}}/>
   </section>
 
   <footer className="footer-principal">

@@ -78,7 +78,14 @@ function App() {
               let clienteId = cliente.id;
               let clienteType = cliente.tipo_usuario;
 
-              navigate('/homeCliente', {nome: clienteName})
+              navigate('/homeCliente', {
+                state: {
+                  nome : clienteName,
+                  id : cliente.id,
+                  tipo_usuario : "cliente",
+                  endereco:cliente.endereco
+                }
+              })
             }
           };
 
